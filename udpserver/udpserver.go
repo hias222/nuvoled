@@ -36,10 +36,28 @@ func StartServer() {
 
 	for {
 		n, addr, err := connection.ReadFromUDP(buffer)
-		fmt.Print("-> ", string(buffer[0:n-1]), "\n")
+
+		i := 0
+		for i < n {
+			fmt.Print(buffer[i])
+			fmt.Print(" ", string(buffer[i]), "\n")
+			i++
+		}
+
+		fmt.Print("-> ", string(buffer[0:n]), "\n")
+		fmt.Print("-> ", string(addr.String()), "\n")
 
 		if strings.TrimSpace((string(buffer[0 : n-1]))) == "STOP" {
 			fmt.Println("Exiting UDP server")
+			return
+		}
+
+		data := []byte("hello")
+		fmt.Printf("data: %s\n", string(data))
+		_, err = connection.WriteToUDP(data, addr)
+
+		if err != nil {
+			fmt.Println(err)
 			return
 		}
 
@@ -51,8 +69,4 @@ func StartServer() {
 
 	}
 
-}
-
-func random(i1, i2 int) {
-	panic("unimplemented")
 }
