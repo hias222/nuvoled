@@ -5,12 +5,15 @@ import (
 	"net"
 )
 
-func SendClientBCInit(data []byte) string {
+func SendClientBCInit(data []byte, server string) string {
 
-	CONNECT := "169.254.154.141:2000"
+	PORT := ":2000"
+	CONNECT := server + PORT
+
 	fmt.Println("conect to ", CONNECT)
 
-	pc, err := net.ListenPacket("udp4", ":2000")
+	pc, err := net.ListenPacket("udp4", PORT)
+
 	if err != nil {
 		fmt.Println(err)
 		return "error ListenPacket"
@@ -19,32 +22,36 @@ func SendClientBCInit(data []byte) string {
 	defer pc.Close()
 
 	s, err := net.ResolveUDPAddr("udp4", CONNECT)
+
 	if err != nil {
 		fmt.Println(err)
 		return "error ResolveUDPAddr"
 	}
 
-	i, err := pc.WriteTo(data, s)
+	fmt.Println("Resolve Server is ", s.String())
+
+	_, err = pc.WriteTo(data, s)
 
 	if err != nil {
 		fmt.Println(err)
-		fmt.Println(i)
+		//fmt.Println(i)
 		return "error WriteTo"
 	}
 
-	buffer := make([]byte, 1024)
-	n, _, err := pc.ReadFrom(buffer)
-	if err != nil {
-		fmt.Println(err)
-		return "error ReadFrom"
-	}
+	/*
+		buffer := make([]byte, 1024)
+		n, _, err := pc.ReadFrom(buffer)
+		if err != nil {
+			fmt.Println(err)
+			return "error ReadFrom"
+		}
 
-	answer := string(buffer[0:n])
-	fmt.Println("Reply:", answer)
+		answer := string(buffer[0:n])
+		fmt.Println("Reply:", answer)
 
-	if answer != "hello" {
-		return "error got " + answer
-	}
-
+		if answer != "hello" {
+			return "error got " + answer
+		}
+	*/
 	return "success"
 }

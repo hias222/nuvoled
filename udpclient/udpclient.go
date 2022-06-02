@@ -7,12 +7,15 @@ import (
 
 func SendClientInit(data []byte) string {
 
-	CONNECT := "127.0.0.1:2000"
-	//MESSAGE := "$$J1P4S"
+	//CONNECT := "127.0.0.1:2000"
+	CONNECT := "192.168.178.255:2000"
 
 	fmt.Println("conect to ", CONNECT)
 
-	s, err := net.ResolveUDPAddr("udp4", CONNECT)
+	s, err := net.ResolveUDPAddr("udp4", ":2000")
+
+	fmt.Println("Resolve Server is ", s.String())
+
 	c, err := net.DialUDP("udp4", nil, s)
 	if err != nil {
 		fmt.Println(err)

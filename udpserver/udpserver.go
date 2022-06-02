@@ -9,7 +9,7 @@ import (
 )
 
 func TestMe() string {
-	return "test"
+	return "Start Test Call .."
 }
 
 func StartServer() {
@@ -39,13 +39,13 @@ func StartServer() {
 
 		i := 0
 		for i < n {
-			fmt.Print(buffer[i])
-			fmt.Print(" ", string(buffer[i]), "\n")
+			fmt.Print(buffer[i], " ")
+			//fmt.Print(string(buffer[i]), " ")
 			i++
 		}
 
-		fmt.Print("-> ", string(buffer[0:n]), "\n")
-		fmt.Print("-> ", string(addr.String()), "\n")
+		fmt.Print("\n")
+		//fmt.Print("-> ", string(addr.String()), "\n")
 
 		if strings.TrimSpace((string(buffer[0 : n-1]))) == "STOP" {
 			fmt.Println("Exiting UDP server")
@@ -53,7 +53,7 @@ func StartServer() {
 		}
 
 		data := []byte("hello")
-		fmt.Printf("data: %s\n", string(data))
+		// fmt.Printf("data: %s\n", string(data))
 		_, err = connection.WriteToUDP(data, addr)
 
 		if err != nil {
