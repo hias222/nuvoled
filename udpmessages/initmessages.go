@@ -3,7 +3,7 @@ package udpmessages
 import "fmt"
 
 func CreateInitMessage() []byte {
-	data := make([]byte, 11)
+	data := make([]byte, 15)
 
 	// 2 mal $$
 	data[0] = 36
@@ -20,6 +20,10 @@ func CreateInitMessage() []byte {
 	data[8] = 52
 	data[9] = 83
 	data[10] = 32
+	data[11] = 8
+	data[12] = 8
+	data[13] = 8
+	data[14] = 8
 
 	fmt.Println("send ", data)
 
