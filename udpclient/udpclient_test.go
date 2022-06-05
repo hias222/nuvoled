@@ -2,6 +2,7 @@ package udpclient_test
 
 import (
 	"testing"
+	"time"
 
 	"swimdata.de/nuvoled/udpclient"
 	"swimdata.de/nuvoled/udpmessages"
@@ -23,9 +24,14 @@ func TestUdpMulticast(t *testing.T) {
 	SERVER := "10.10.10.255"
 	//SERVER := "169.254.255.255"
 
+	var testdata = "fail"
+
 	data := udpmessages.CreateInitMessage()
 
-	testdata := udpclient.SendClientBCInit(data, SERVER)
+	for i := 1; i <= 10; i++ {
+		testdata = udpclient.SendClientBCInit(data, SERVER)
+		time.Sleep(1 * time.Second)
+	}
 
 	if testdata != "success" {
 		t.Fatal("error multicast \n", testdata, "\n")
