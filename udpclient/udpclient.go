@@ -8,11 +8,13 @@ import (
 func SendClientInit(data []byte) string {
 
 	//CONNECT := "127.0.0.1:2000"
-	CONNECT := "192.168.178.255:2000"
+	//169.254.255.255
+	//CONNECT := "192.168.178.255:2000"
 
-	fmt.Println("conect to ", CONNECT)
+	//CONNECT := "169.254.255.255:2000"
+	//fmt.Println("conect to ", CONNECT)
 
-	s, err := net.ResolveUDPAddr("udp4", ":2000")
+	s, err := net.ResolveUDPAddr("udp4", "10.10.10.255:2000")
 
 	fmt.Println("Resolve Server is ", s.String())
 

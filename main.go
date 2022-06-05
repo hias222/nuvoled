@@ -8,5 +8,8 @@ import (
 
 func main() {
 	fmt.Println(udpserver.TestMe())
-	udpserver.StartServer()
+
+	connection := udpserver.GetServerClient()
+
+	udpserver.StartServer(connection)
 }

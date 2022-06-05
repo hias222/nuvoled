@@ -12,23 +12,51 @@ func TestMe() string {
 	return "Start Test Call .."
 }
 
-func StartServer() {
+func GetServerClient() *net.UDPConn {
 	PORT := ":2000"
 
 	s, err := net.ResolveUDPAddr("udp4", PORT)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return nil
 	}
 
 	connection, err := net.ListenUDP("udp4", s)
 
+	net.ListenUDP("udp4", s)
+
 	if err != nil {
 		fmt.Println(err)
-		return
+		return nil
 	}
 
-	defer connection.Close()
+	fmt.Println(s.String())
+
+	//defer connection.Close()
+
+	return connection
+
+}
+
+func StartServer(connection *net.UDPConn) {
+	/*
+		PORT := ":2000"
+
+		s, err := net.ResolveUDPAddr("udp4", PORT)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		connection, err := net.ListenUDP("udp4", s)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		defer connection.Close()
+	*/
 
 	buffer := make([]byte, 1024)
 
@@ -36,6 +64,11 @@ func StartServer() {
 
 	for {
 		n, addr, err := connection.ReadFromUDP(buffer)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		i := 0
 		for i < n {
@@ -45,7 +78,7 @@ func StartServer() {
 		}
 
 		fmt.Print("\n")
-		//fmt.Print("-> ", string(addr.String()), "\n")
+		fmt.Print("-> ", string(addr.String()), "\n")
 
 		if strings.TrimSpace((string(buffer[0 : n-1]))) == "STOP" {
 			fmt.Println("Exiting UDP server")
