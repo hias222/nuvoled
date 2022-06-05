@@ -6,6 +6,8 @@ import (
 	"net"
 	"strings"
 	"time"
+
+	"swimdata.de/nuvoled/udpmessages"
 )
 
 func TestMe() string {
@@ -70,19 +72,24 @@ func StartServer(connection *net.UDPConn) {
 			return
 		}
 
-		i := 0
-		for i < n {
-			fmt.Print(buffer[i], " ")
-			//fmt.Print(string(buffer[i]), " ")
-			i++
-		}
+		udpmessages.BufferToString(buffer)
 
-		fmt.Print("\n")
 		fmt.Print("-> ", string(addr.String()), "\n")
 
 		if strings.TrimSpace((string(buffer[0 : n-1]))) == "STOP" {
 			fmt.Println("Exiting UDP server")
 			return
+		}
+
+		if n > 3 && buffer[2] == 15 {
+			fmt.Println("Send Messages to panel ")
+			_, err = connection.WriteToUDP(udpmessages.CreateRegisterMessage(buffer), addr)
+			time.Sleep(1 * time.Second)
+			_, err = connection.WriteToUDP(udpmessages.ActivatePanles(buffer), addr)
+			time.Sleep(1 * time.Second)
+			_, err = connection.WriteToUDP(udpmessages.TurnOnPanles(buffer), addr)
+			time.Sleep(1 * time.Second)
+			fmt.Println("Finish Registartion")
 		}
 
 		data := []byte("hello")
