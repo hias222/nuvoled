@@ -42,11 +42,7 @@ func SendUDPMessage(data []byte) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	fmt.Println("the UDP Server is ", c.RemoteAddr().String())
-
 	defer c.Close()
-
 	_, err = c.Write(data)
 }
 
