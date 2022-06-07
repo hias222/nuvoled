@@ -14,17 +14,20 @@ func TestMe() string {
 	return "Start Test Call .."
 }
 
-func GetServerClient() *net.UDPConn {
-	PORT := ":2000"
+func GetLocalAddress() *net.UDPAddr {
+	PORT := "10.10.10.255:2000"
 
 	s, err := net.ResolveUDPAddr("udp4", PORT)
 	if err != nil {
 		fmt.Println(err)
 		return nil
 	}
+	return s
+}
+
+func GetServerClient(s *net.UDPAddr) *net.UDPConn {
 
 	connection, err := net.ListenUDP("udp4", s)
-
 	net.ListenUDP("udp4", s)
 
 	if err != nil {
@@ -37,30 +40,11 @@ func GetServerClient() *net.UDPConn {
 	//defer connection.Close()
 
 	return connection
-
 }
 
 func StartServer(connection *net.UDPConn) {
-	/*
-		PORT := ":2000"
 
-		s, err := net.ResolveUDPAddr("udp4", PORT)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		connection, err := net.ListenUDP("udp4", s)
-
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		defer connection.Close()
-	*/
-
-	buffer := make([]byte, 1024)
+	buffer := make([]byte, 2048)
 
 	rand.Seed(time.Now().Unix())
 
@@ -72,9 +56,7 @@ func StartServer(connection *net.UDPConn) {
 			return
 		}
 
-		udpmessages.BufferToString(buffer)
-
-		fmt.Print("-> ", string(addr.String()), "\n")
+		udpmessages.BufferToString(buffer, n)
 
 		if strings.TrimSpace((string(buffer[0 : n-1]))) == "STOP" {
 			fmt.Println("Exiting UDP server")
@@ -82,6 +64,7 @@ func StartServer(connection *net.UDPConn) {
 		}
 
 		if n > 3 && buffer[2] == 15 {
+			fmt.Print("-> ", string(addr.String()), "\n")
 			fmt.Println("Send Messages to panel ")
 			_, err = connection.WriteToUDP(udpmessages.CreateRegisterMessage(buffer), addr)
 			time.Sleep(1 * time.Second)
@@ -98,13 +81,8 @@ func StartServer(connection *net.UDPConn) {
 
 		if err != nil {
 			fmt.Println(err)
-			return
-		}
-
-		if err != nil {
-			fmt.Println(err)
 			fmt.Println(addr)
-			return
+			//return
 		}
 
 	}

@@ -14,7 +14,7 @@ func SendClientInit(data []byte) string {
 	//CONNECT := "169.254.255.255:2000"
 	//fmt.Println("conect to ", CONNECT)
 
-	s, err := net.ResolveUDPAddr("udp4", "10.10.10.255:2000")
+	s, err := net.ResolveUDPAddr("udp4", "10.10.10.7:2000")
 
 	fmt.Println("Resolve Server is ", s.String())
 

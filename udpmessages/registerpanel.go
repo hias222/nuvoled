@@ -26,7 +26,7 @@ func CreateRegisterMessage(panel []byte) []byte {
 	buffer[13] = 0
 	buffer[14] = 0
 
-	BufferToString(buffer)
+	BufferToString(buffer, 15)
 
 	return buffer
 

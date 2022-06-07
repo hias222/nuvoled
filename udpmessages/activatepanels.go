@@ -14,7 +14,7 @@ func ActivatePanles(panel []byte) []byte {
 	buffer[4] = panel[6]
 	buffer[5] = panel[7]
 
-	BufferToString(buffer)
+	BufferToString(buffer, 6)
 
 	return buffer
 
@@ -43,7 +43,7 @@ func TurnOnPanles(panel []byte) []byte {
 	buffer[11] = 8
 	buffer[12] = 8
 
-	BufferToString(buffer)
+	BufferToString(buffer, 13)
 
 	return buffer
 
