@@ -10,39 +10,56 @@ import (
 	"swimdata.de/nuvoled/udpmessages"
 )
 
+var udpSource *net.UDPAddr
+var udpDestination *net.UDPAddr
+
 func TestMe() string {
 	return "Start Test Call .."
 }
 
-func GetLocalAddress() *net.UDPAddr {
-	PORT := "10.10.10.255:2000"
+func InitLocalUdpAdress() {
+	PORT := ":2000"
 
 	s, err := net.ResolveUDPAddr("udp4", PORT)
 	if err != nil {
 		fmt.Println(err)
-		return nil
 	}
-	return s
+	udpSource = s
+	fmt.Println("Local Listener Address: ", s.String())
+
+	SENDERPORT := "10.10.10.255:2000"
+	sender, err := net.ResolveUDPAddr("udp4", SENDERPORT)
+	if err != nil {
+		fmt.Println(err)
+	}
+	udpDestination = sender
+	fmt.Println("UDP Detination Address: ", sender.String())
+
 }
 
-func GetServerClient(s *net.UDPAddr) *net.UDPConn {
+func SendUDPMessage(data []byte) {
+	c, err := net.DialUDP("udp4", nil, udpDestination)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	connection, err := net.ListenUDP("udp4", s)
-	net.ListenUDP("udp4", s)
+	fmt.Println("the UDP Server is ", c.RemoteAddr().String())
+
+	defer c.Close()
+
+	_, err = c.Write(data)
+}
+
+func StartServer() {
+
+	connection, err := net.ListenUDP("udp4", udpSource)
+	net.ListenUDP("udp4", udpSource)
 
 	if err != nil {
 		fmt.Println(err)
-		return nil
 	}
 
-	fmt.Println(s.String())
-
 	//defer connection.Close()
-
-	return connection
-}
-
-func StartServer(connection *net.UDPConn) {
 
 	buffer := make([]byte, 2048)
 
@@ -66,23 +83,18 @@ func StartServer(connection *net.UDPConn) {
 		if n > 3 && buffer[2] == 15 {
 			fmt.Print("-> ", string(addr.String()), "\n")
 			fmt.Println("Send Messages to panel ")
-			_, err = connection.WriteToUDP(udpmessages.CreateRegisterMessage(buffer), addr)
+			SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
 			time.Sleep(1 * time.Second)
-			_, err = connection.WriteToUDP(udpmessages.ActivatePanles(buffer), addr)
+			SendUDPMessage(udpmessages.ActivatePanles(buffer))
 			time.Sleep(1 * time.Second)
-			_, err = connection.WriteToUDP(udpmessages.TurnOnPanles(buffer), addr)
-			time.Sleep(1 * time.Second)
-			fmt.Println("Finish Registartion")
-		}
+			SendUDPMessage(udpmessages.TurnOnPanles(buffer))
 
-		data := []byte("hello")
-		// fmt.Printf("data: %s\n", string(data))
-		_, err = connection.WriteToUDP(data, addr)
-
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println(addr)
-			//return
+			if err != nil {
+				fmt.Println(err)
+				fmt.Println(addr)
+				//return
+			}
+			fmt.Println("Finish Registration")
 		}
 
 	}
