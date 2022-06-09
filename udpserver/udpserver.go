@@ -46,10 +46,33 @@ func SendUDPMessage(data []byte) {
 	_, err = c.Write(data)
 }
 
+func handleBufferData(buffer []byte, n int, addr net.Addr) {
+	udpmessages.BufferToString(buffer, n)
+
+	if strings.TrimSpace((string(buffer[0 : n-1]))) == "STOP" {
+		fmt.Println("Exiting UDP server")
+		return
+	}
+
+	if n > 3 && buffer[2] == 15 {
+		fmt.Print("-> ", string(addr.String()), "\n")
+		fmt.Println("Send Messages to panel ")
+		SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
+		time.Sleep(1 * time.Second)
+		SendUDPMessage(udpmessages.ActivatePanles(buffer))
+		time.Sleep(1 * time.Second)
+		SendUDPMessage(udpmessages.TurnOnPanles(buffer))
+
+		fmt.Println("Finish Registration")
+	}
+}
+
 func StartServer() {
 
 	connection, err := net.ListenUDP("udp4", udpSource)
 	net.ListenUDP("udp4", udpSource)
+
+	connection.SetReadBuffer(1048576)
 
 	if err != nil {
 		fmt.Println(err)
@@ -69,29 +92,7 @@ func StartServer() {
 			return
 		}
 
-		udpmessages.BufferToString(buffer, n)
-
-		if strings.TrimSpace((string(buffer[0 : n-1]))) == "STOP" {
-			fmt.Println("Exiting UDP server")
-			return
-		}
-
-		if n > 3 && buffer[2] == 15 {
-			fmt.Print("-> ", string(addr.String()), "\n")
-			fmt.Println("Send Messages to panel ")
-			SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
-			time.Sleep(1 * time.Second)
-			SendUDPMessage(udpmessages.ActivatePanles(buffer))
-			time.Sleep(1 * time.Second)
-			SendUDPMessage(udpmessages.TurnOnPanles(buffer))
-
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println(addr)
-				//return
-			}
-			fmt.Println("Finish Registration")
-		}
+		go handleBufferData(buffer, n, addr)
 
 	}
 

@@ -1,5 +1,7 @@
 package udpmessages
 
+import "fmt"
+
 func CreateRegisterMessage(panel []byte) []byte {
 	// <-- 36 36 120 2 0 8 8 1 23 49 74 8 8 0 0
 	//  --> 36 36 15 0 74 23 49 80 52 83 32 8 8 8 8
@@ -26,6 +28,7 @@ func CreateRegisterMessage(panel []byte) []byte {
 	buffer[13] = 0
 	buffer[14] = 0
 
+	fmt.Print("<-- ")
 	BufferToString(buffer, 15)
 
 	return buffer

@@ -1,5 +1,7 @@
 package udpmessages
 
+import "fmt"
+
 func ActivatePanles(panel []byte) []byte {
 
 	//<-- 36 36 160 23 49 74 (aktiviert)
@@ -14,6 +16,7 @@ func ActivatePanles(panel []byte) []byte {
 	buffer[4] = panel[6]
 	buffer[5] = panel[7]
 
+	fmt.Print("<-- ")
 	BufferToString(buffer, 6)
 
 	return buffer
@@ -43,6 +46,7 @@ func TurnOnPanles(panel []byte) []byte {
 	buffer[11] = 8
 	buffer[12] = 8
 
+	fmt.Print("<-- ")
 	BufferToString(buffer, 13)
 
 	return buffer

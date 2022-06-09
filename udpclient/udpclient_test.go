@@ -28,7 +28,7 @@ func TestUdpMulticast(t *testing.T) {
 
 	data := udpmessages.CreateInitMessage()
 
-	for i := 1; i <= 2; i++ {
+	for i := 1; i < 2; i++ {
 		testdata = udpclient.SendClientBCInit(data, SERVER)
 		time.Sleep(1 * time.Second)
 	}
