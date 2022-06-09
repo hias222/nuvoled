@@ -21,6 +21,7 @@ var (
 	dpiImage      = flag.Float64("dpiImage", 72, "screen resolution in Dots Per Inch")
 	fontfileImage = flag.String("fontfileImage", "../static/fonts/UbuntuMono-R.ttf", "filename of the ttf font")
 	sizeImage     = flag.Float64("sizeImage", 32, "font size in points")
+	debug         = flag.Bool("debug", false, "debug mode")
 )
 
 //https://stackoverflow.com/questions/38299930/how-to-add-a-simple-text-label-to-an-image-in-go
@@ -38,7 +39,7 @@ func addLabel(img *image.RGBA, x, y int, label string) {
 	d.DrawString(label)
 }
 
-func addLabelFont(img *image.RGBA, x, y int, label string) {
+func addLabelFont(img *image.RGBA, x, y int, top string, button string) {
 
 	flag.Parse()
 
@@ -60,7 +61,7 @@ func addLabelFont(img *image.RGBA, x, y int, label string) {
 
 	fgColor := color.RGBA{0, 0, 0, 255}
 	fg := image.NewUniform(fgColor)
-	bgColor := color.RGBA{2, 255, 2, 0xff}
+	bgColor := color.RGBA{1, 2, 3, 0xff}
 	bg := image.NewUniform(bgColor)
 	//bg := image.Black
 
@@ -78,30 +79,42 @@ func addLabelFont(img *image.RGBA, x, y int, label string) {
 	//size := 12.0 // font size in pixels
 	pt := freetype.Pt(x, y+int(c.PointToFixed(*sizeImage)>>6))
 
-	if _, err := c.DrawString(label, pt); err != nil {
+	if _, err := c.DrawString(top, pt); err != nil {
 		// handle error
 		log.Println("Error Draw")
 		fmt.Println(err)
 		return
 	}
+
+	pt = freetype.Pt(x, y+64+int(c.PointToFixed(*sizeImage)>>6))
+
+	if _, err := c.DrawString(button, pt); err != nil {
+		// handle error
+		log.Println("Error Draw")
+		fmt.Println(err)
+		return
+	}
+
 	log.Println("End Fonts Draw")
 }
 
-func CreateImage() {
+func CreateImageRGBA() []byte {
 
 	myImg := image.NewRGBA(image.Rect(0, 0, 128, 128))
 
-	addLabelFont(myImg, 0, 0, "Hello")
+	addLabelFont(myImg, 0, 0, "Hello", "World")
 
 	//udpmessages.BufferToString(myImg.Pix, 10024)
 
-	fmt.Printf("myImg: %v\n", myImg)
+	if *debug {
+		fmt.Printf("myImg: %v\n", myImg)
+		out, err := os.Create("cat.png")
+		png.Encode(out, myImg)
+		out.Close()
 
-	out, err := os.Create("cat.png")
-	png.Encode(out, myImg)
-	out.Close()
-
-	if err != nil {
-		fmt.Println(err)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
+	return myImg.Pix
 }

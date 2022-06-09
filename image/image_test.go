@@ -7,7 +7,7 @@ import (
 )
 
 func TestCreateImage(t *testing.T) {
-	image.CreateImage()
+	image.CreateImageRGBA()
 	t.Fail()
 }
 
