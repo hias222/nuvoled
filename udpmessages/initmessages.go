@@ -22,8 +22,8 @@ func CreateInitMessage() []byte {
 	data[10] = 32
 	data[11] = 8
 	data[12] = 8
-	data[13] = 8
-	data[14] = 8
+	data[13] = 0
+	data[14] = 0
 
 	fmt.Println("send ", data)
 

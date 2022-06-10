@@ -18,10 +18,11 @@ import (
 )
 
 var (
-	dpiImage      = flag.Float64("dpiImage", 72, "screen resolution in Dots Per Inch")
-	fontfileImage = flag.String("fontfileImage", "../static/fonts/UbuntuMono-R.ttf", "filename of the ttf font")
-	sizeImage     = flag.Float64("sizeImage", 32, "font size in points")
-	debug         = flag.Bool("debug", false, "debug mode")
+	dpiImage = flag.Float64("dpiImage", 144, "screen resolution in Dots Per Inch")
+	//fontfileImage = flag.String("fontfileImage", "static/fonts/UbuntuMono-R.ttf", "filename of the ttf font")
+	fontfileImage = flag.String("fontfileImage", "static/fonts/FIXED_BO.ttf", "filename of the ttf font")
+	sizeImage     = flag.Float64("sizeImage", 22, "font size in points")
+	debug         = flag.Bool("debug", true, "debug mode")
 )
 
 //https://stackoverflow.com/questions/38299930/how-to-add-a-simple-text-label-to-an-image-in-go
@@ -59,9 +60,9 @@ func addLabelFont(img *image.RGBA, x, y int, top string, button string) {
 
 	//fg := image.Black
 
-	fgColor := color.RGBA{0, 0, 0, 255}
+	fgColor := color.RGBA{255, 255, 255, 255}
 	fg := image.NewUniform(fgColor)
-	bgColor := color.RGBA{1, 2, 3, 0xff}
+	bgColor := color.RGBA{0, 0, 255, 0xff}
 	bg := image.NewUniform(bgColor)
 	//bg := image.Black
 
@@ -102,7 +103,7 @@ func CreateImageRGBA() []byte {
 
 	myImg := image.NewRGBA(image.Rect(0, 0, 128, 128))
 
-	addLabelFont(myImg, 0, 0, "Hello", "World")
+	addLabelFont(myImg, 0, 0, "W 1", "L 5")
 
 	//udpmessages.BufferToString(myImg.Pix, 10024)
 

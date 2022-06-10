@@ -2,6 +2,7 @@ package mqtttoudpclient
 
 import (
 	"fmt"
+	"time"
 
 	"swimdata.de/nuvoled/image"
 	"swimdata.de/nuvoled/udpmessages"
@@ -71,6 +72,7 @@ func SendUDPMessage(data []byte) {
 			udpmessages.BufferToString(buffer, 1500)
 			//fmt.Printf("buffer: %v\n", buffer)
 			udpserver.SendUDPMessage(buffer)
+			//time.Sleep(10 * time.Millisecond)
 		}
 	}
 
@@ -89,7 +91,11 @@ func SendUDPMessage(data []byte) {
 
 	udpmessages.BufferToString(bufferend, 1450)
 	udpserver.SendUDPMessage(buffer)
+	//time.Sleep(10 * time.Millisecond)
 	udpmessages.BufferToString(generateFrameSyncMessage(framenumber), 10)
-	udpserver.SendUDPMessage(buffer)
+	udpserver.SendUDPMessage(generateFrameSyncMessage(framenumber - 1))
+	time.Sleep(10 * time.Millisecond)
+	udpserver.SendUDPMessage(generateFrameSyncMessage(framenumber))
+	row = 0
 
 }
