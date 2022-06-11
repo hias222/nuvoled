@@ -2,6 +2,7 @@ package mqtttoudpclient
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"swimdata.de/nuvoled/image"
@@ -37,10 +38,7 @@ func generateFrameSyncMessage(frame int) []byte {
 
 }
 
-func SendUDPMessage(data []byte) {
-	// input Message like header 001 001
-	var message = string(data)
-	fmt.Println(message)
+func sendEventMessage(event string, heat string) {
 
 	framenumber++
 	// add frame
@@ -48,7 +46,7 @@ func SendUDPMessage(data []byte) {
 		framenumber = 1
 	}
 
-	var byteRGBA = image.CreateImageRGBA()
+	var byteRGBA = image.CreateImageRGBA(event, heat)
 
 	buffer := make([]byte, 1450)
 
@@ -98,5 +96,44 @@ func SendUDPMessage(data []byte) {
 	//udpmessages.BufferToString(generateFrameSyncMessage(framenumber), 15)
 	udpserver.SendUDPListenMessage(generateFrameSyncMessage(framenumber))
 	row = 0
+
+}
+
+func getMessageType(message string) string {
+	strParts := strings.Split(message, " ")
+	if len(strParts) > 0 {
+		return strParts[0]
+	}
+	return ""
+}
+
+func getEvent(message string) string {
+	strParts := strings.Split(message, " ")
+	if len(strParts) > 1 {
+		return strParts[1]
+	}
+	return "000"
+}
+
+func getHeat(message string) string {
+	strParts := strings.Split(message, " ")
+	if len(strParts) > 2 {
+		return strParts[2]
+	}
+	return "000"
+}
+
+func SendUDPMessage(data []byte) {
+	// input Message like header 001 001
+	var message = string(data)
+	var messagetype = getMessageType(message)
+	if messagetype == "header" {
+		event := "W " + getEvent(message)
+		heat := "L " + getHeat(message)
+		fmt.Println("--> header event with ", event, " - ", heat)
+		sendEventMessage(event, heat)
+	} else {
+		fmt.Println("unknown ", messagetype)
+	}
 
 }
