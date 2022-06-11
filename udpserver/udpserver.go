@@ -19,9 +19,9 @@ func TestMe() string {
 	return "Start Test Call .."
 }
 
-func InitLocalUdpAdress() {
-	PORT := "192.168.178.175:2000"
-
+func InitLocalUdpAdress(localAddress string, broadcast string) {
+	//PORT := "192.168.178.175:2000"
+	PORT := localAddress + ":2000"
 	working = false
 
 	s, err := net.ResolveUDPAddr("udp4", PORT)
@@ -34,7 +34,7 @@ func InitLocalUdpAdress() {
 	fmt.Println("Local Listener Address: ", s.String())
 
 	//SENDERPORT := "169.254.255.255:2000"
-	SENDERPORT := "192.168.178.255:2000"
+	SENDERPORT := broadcast + ":2000"
 
 	sender, err := net.ResolveUDPAddr("udp4", SENDERPORT)
 	if err != nil {
