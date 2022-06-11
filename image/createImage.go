@@ -22,7 +22,7 @@ var (
 	//fontfileImage = flag.String("fontfileImage", "static/fonts/UbuntuMono-R.ttf", "filename of the ttf font")
 	fontfileImage = flag.String("fontfileImage", "static/fonts/FIXED_BO.ttf", "filename of the ttf font")
 	sizeImage     = flag.Float64("sizeImage", 16, "font size in points")
-	debug         = flag.Bool("debug", true, "debug mode")
+	debug         = flag.Bool("debug", false, "debug mode")
 )
 
 //https://stackoverflow.com/questions/38299930/how-to-add-a-simple-text-label-to-an-image-in-go
