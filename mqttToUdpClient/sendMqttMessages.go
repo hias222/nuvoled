@@ -70,7 +70,7 @@ func SendUDPMessage(data []byte) {
 			row++
 			//udpmessages.BufferToString(buffer, 1500)
 			//fmt.Printf("buffer: %v\n", buffer)
-			udpserver.SendUDPMessage(buffer)
+			udpserver.SendUDPListenMessage(buffer)
 			//time.Sleep(10 * time.Millisecond)
 		}
 	}
@@ -89,14 +89,14 @@ func SendUDPMessage(data []byte) {
 	}
 
 	//udpmessages.BufferToString(bufferend, 1450)
-	udpserver.SendUDPMessage(buffer)
+	udpserver.SendUDPListenMessage(buffer)
 	// Ende
 	time.Sleep(10 * time.Millisecond)
 	//udpmessages.BufferToString(generateFrameSyncMessage(framenumber-1), 15)
-	udpserver.SendUDPMessage(generateFrameSyncMessage(framenumber - 1))
+	udpserver.SendUDPListenMessage(generateFrameSyncMessage(framenumber - 1))
 	time.Sleep(30 * time.Millisecond)
 	//udpmessages.BufferToString(generateFrameSyncMessage(framenumber), 15)
-	udpserver.SendUDPMessage(generateFrameSyncMessage(framenumber))
+	udpserver.SendUDPListenMessage(generateFrameSyncMessage(framenumber))
 	row = 0
 
 }

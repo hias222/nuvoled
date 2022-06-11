@@ -11,8 +11,8 @@ import (
 )
 
 var udpSource *net.UDPAddr
-var udpDest *net.UDPAddr
 var udpDestination *net.UDPAddr
+var listenConnection *net.UDPConn
 var working bool
 
 func TestMe() string {
@@ -20,7 +20,7 @@ func TestMe() string {
 }
 
 func InitLocalUdpAdress() {
-	PORT := ":2000"
+	PORT := "192.168.178.175:2000"
 
 	working = false
 
@@ -32,10 +32,9 @@ func InitLocalUdpAdress() {
 	udpSource = s
 
 	fmt.Println("Local Listener Address: ", s.String())
-	fmt.Println("Local Sender Address: ", udpDest.String())
 
-	SENDERPORT := "169.254.255.255:2000"
-	//SENDERPORT := "192.168.178.255:2000"
+	//SENDERPORT := "169.254.255.255:2000"
+	SENDERPORT := "192.168.178.255:2000"
 
 	sender, err := net.ResolveUDPAddr("udp4", SENDERPORT)
 	if err != nil {
@@ -55,6 +54,16 @@ func SendUDPMessage(data []byte) {
 	}
 	defer c.Close()
 	_, err = c.Write(data)
+}
+
+func SendUDPListenMessage(data []byte) {
+
+	_, error := listenConnection.WriteToUDP(data, udpDestination)
+
+	if error != nil {
+		fmt.Println("Error sending ")
+	}
+
 }
 
 func handleBufferData(buffer []byte, n int, addr net.Addr) {
@@ -92,27 +101,32 @@ func handleBufferData(buffer []byte, n int, addr net.Addr) {
 
 func StartServer() {
 
-	connection, err := net.ListenUDP("udp4", udpSource)
-	net.ListenUDP("udp4", udpSource)
+	Connection, err := net.ListenUDP("udp4", udpSource)
 
-	connection.SetReadBuffer(1048576)
+	listenConnection = Connection
+
+	listenConnection.SetReadBuffer(1048576)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	//defer connection.Close()
+	//defer listenConnection.Close()
 
 	buffer := make([]byte, 2048)
 
 	rand.Seed(time.Now().Unix())
 
 	for {
-		n, addr, err := connection.ReadFromUDP(buffer)
+		n, addr, err := listenConnection.ReadFromUDP(buffer)
 
 		if err != nil {
 			fmt.Println(err)
 			return
+		}
+
+		if listenConnection == nil {
+			fmt.Println("broken")
 		}
 
 		go handleBufferData(buffer, n, addr)

@@ -20,8 +20,8 @@ func TestUdpUnicast(t *testing.T) {
 
 func TestUdpMulticast(t *testing.T) {
 
-	//SERVER := "192.168.178.255"
-	SERVER := "10.10.10.255"
+	SERVER := "192.168.178.175"
+	//SERVER := "10.10.10.255"
 	//SERVER := "169.254.255.255"
 
 	var testdata = "fail"
@@ -36,6 +36,8 @@ func TestUdpMulticast(t *testing.T) {
 	if testdata != "success" {
 		t.Fatal("error multicast \n", testdata, "\n")
 	}
+
+	t.Fail()
 
 }
 
