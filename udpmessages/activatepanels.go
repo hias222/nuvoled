@@ -9,8 +9,8 @@ func ActivatePanles(panel []byte) []byte {
 
 	buffer := make([]byte, 6)
 
-	buffer[0] = panel[0]
-	buffer[1] = panel[1]
+	buffer[0] = 36
+	buffer[1] = 36
 	buffer[2] = 160
 	buffer[3] = panel[5]
 	buffer[4] = panel[6]

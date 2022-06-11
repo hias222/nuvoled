@@ -11,6 +11,7 @@ import (
 )
 
 var udpSource *net.UDPAddr
+var udpDest *net.UDPAddr
 var udpDestination *net.UDPAddr
 var working bool
 
@@ -27,11 +28,14 @@ func InitLocalUdpAdress() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	udpSource = s
-	fmt.Println("Local Listener Address: ", s.String())
 
-	//SENDERPORT := "169.254.255.255:2000"
-	SENDERPORT := "192.168.178.255:2000"
+	udpSource = s
+
+	fmt.Println("Local Listener Address: ", s.String())
+	fmt.Println("Local Sender Address: ", udpDest.String())
+
+	SENDERPORT := "169.254.255.255:2000"
+	//SENDERPORT := "192.168.178.255:2000"
 
 	sender, err := net.ResolveUDPAddr("udp4", SENDERPORT)
 	if err != nil {
@@ -41,6 +45,8 @@ func InitLocalUdpAdress() {
 	fmt.Println("UDP Detination Address: ", sender.String())
 
 }
+
+// ?????
 
 func SendUDPMessage(data []byte) {
 	c, err := net.DialUDP("udp4", nil, udpDestination)
@@ -68,13 +74,13 @@ func handleBufferData(buffer []byte, n int, addr net.Addr) {
 	if n > 3 && buffer[2] == 15 {
 		fmt.Println("Send Messages to panel ")
 		fmt.Print("-> ", string(addr.String()), "\n")
-		SendUDPMessage(udpmessages.ResetPanles())
+		//SendUDPMessage(udpmessages.ResetPanles())
+		//time.Sleep(1 * time.Second)
+		//SendUDPMessage(udpmessages.RefreshPanles())
+		//time.Sleep(1 * time.Second)
+		//SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
 		time.Sleep(1 * time.Second)
-		SendUDPMessage(udpmessages.RefreshPanles())
-		time.Sleep(1 * time.Second)
-		SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
-		time.Sleep(1 * time.Second)
-		SendUDPMessage(udpmessages.ActivatePanles(buffer))
+		//SendUDPMessage(udpmessages.ActivatePanles(buffer))
 		time.Sleep(1 * time.Second)
 		//SendUDPMessage(udpmessages.TurnOnPanles(buffer))
 		//time.Sleep(1 * time.Second)

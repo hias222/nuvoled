@@ -12,7 +12,7 @@ func CreateRegisterMessage(panel []byte) []byte {
 	buffer[1] = panel[1]
 	buffer[2] = 120
 	buffer[3] = 2
-	buffer[4] = 0
+	buffer[4] = 32
 	//Größe
 	buffer[5] = 8
 	buffer[6] = 8

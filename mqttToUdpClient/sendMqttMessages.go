@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"swimdata.de/nuvoled/image"
-	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
 )
 
@@ -58,18 +57,18 @@ func SendUDPMessage(data []byte) {
 
 	for i := 0; i < len(byteRGBA); i = i + 4 {
 
-		buffer[linebytesnr] = byteRGBA[i]
+		buffer[linebytesnr] = byteRGBA[i+2]
 		linebytesnr++
 		buffer[linebytesnr] = byteRGBA[i+1]
 		linebytesnr++
-		buffer[linebytesnr] = byteRGBA[i+2]
+		buffer[linebytesnr] = byteRGBA[i]
 		linebytesnr++
 
 		if linebytesnr > 1449 {
 			linebytesnr = 10
 			generateFirst10Bytes(framenumber, row, 45, (buffer))
 			row++
-			udpmessages.BufferToString(buffer, 1500)
+			//udpmessages.BufferToString(buffer, 1500)
 			//fmt.Printf("buffer: %v\n", buffer)
 			udpserver.SendUDPMessage(buffer)
 			//time.Sleep(10 * time.Millisecond)
@@ -89,12 +88,14 @@ func SendUDPMessage(data []byte) {
 		bufferend[i] = 0
 	}
 
-	udpmessages.BufferToString(bufferend, 1450)
+	//udpmessages.BufferToString(bufferend, 1450)
 	udpserver.SendUDPMessage(buffer)
-	//time.Sleep(10 * time.Millisecond)
-	udpmessages.BufferToString(generateFrameSyncMessage(framenumber), 10)
-	udpserver.SendUDPMessage(generateFrameSyncMessage(framenumber - 1))
+	// Ende
 	time.Sleep(10 * time.Millisecond)
+	//udpmessages.BufferToString(generateFrameSyncMessage(framenumber-1), 15)
+	udpserver.SendUDPMessage(generateFrameSyncMessage(framenumber - 1))
+	time.Sleep(30 * time.Millisecond)
+	//udpmessages.BufferToString(generateFrameSyncMessage(framenumber), 15)
 	udpserver.SendUDPMessage(generateFrameSyncMessage(framenumber))
 	row = 0
 
