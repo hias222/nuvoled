@@ -10,15 +10,9 @@ import (
 
 func main() {
 
-	ipPtr := flag.String("ip", "192.168.178.175", "local ip")
 	bcPtr := flag.String("bc", "192.168.178.255", "broadcast address")
 	flag.Parse()
-	fmt.Println("-ip", *ipPtr)
 	fmt.Println("-bc", *bcPtr)
-
-	if *ipPtr == "" {
-		fmt.Println("missing")
-	}
 
 	//Start
 	fmt.Println(udpserver.TestMe())
@@ -28,6 +22,6 @@ func main() {
 	mqttclient.StartCLientMqtt(c)
 
 	//UDP
-	udpserver.InitLocalUdpAdress(*ipPtr, *bcPtr)
+	udpserver.InitLocalUdpAdress(*bcPtr)
 	udpserver.StartServer()
 }
