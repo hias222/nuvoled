@@ -5,6 +5,7 @@ import "fmt"
 func ActivatePanles(panel []byte) []byte {
 
 	//<-- 36 36 160 23 49 74 (aktiviert)
+	//36 36 155 0 (save config)
 	// --> 36 36 15 0 74 23 49 80 52 83 32 8 8 8 8
 
 	buffer := make([]byte, 6)
@@ -21,6 +22,25 @@ func ActivatePanles(panel []byte) []byte {
 
 	return buffer
 
+}
+
+func SavePanles(panel []byte) []byte {
+
+	//<-- 36 36 160 23 49 74 (aktiviert)
+	//36 36 155 0 (save config)
+	// --> 36 36 15 0 74 23 49 80 52 83 32 8 8 8 8
+
+	buffer := make([]byte, 6)
+
+	buffer[0] = 36
+	buffer[1] = 36
+	buffer[2] = 155
+	buffer[3] = 0
+
+	fmt.Print("SavePanles <-- ")
+	BufferToString(buffer, 6)
+
+	return buffer
 }
 
 func TurnOnPanles(panel []byte) []byte {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"strconv"
 	"strings"
 	"time"
 
@@ -16,21 +17,25 @@ var listenConnection *net.UDPConn
 var working bool
 var register bool
 
-func StartMessage(bc string, reg bool) string {
+func StartMessage(bc string, reg bool, ip bool) string {
 	var Message = "Start laufanzeiger .."
 
 	if reg {
 		Message = Message + "\n # Registration of panles is on "
+	} else {
+		Message = Message + "\n # Registration is off "
 	}
 
 	Message = Message + "\n # udp send to " + bc
-	Message = Message + "\n # usage: ./laufanzeiger -bc 169.254.255.255 -reg true "
-
+	Message = Message + "\n # local ip (empty listen an all) " + strconv.FormatBool(ip)
+	Message = Message + "\n # usage: ./laufanzeiger -bc 169.254.255.255 -reg=true/false -ip=true/false "
+	Message = Message + "\n\n # to work with multiple interfaces use local IP - reg is not possible with IP " + strconv.FormatBool(ip)
+	Message = Message + "\n"
 	return Message
 }
 
-func InitLocalUdpAdress(broadcast string, reg bool) {
-	PORT := ":2000"
+func InitLocalUdpAdress(broadcast string, reg bool, localip string) {
+	PORT := localip + ":2000"
 
 	working = false
 	register = reg
@@ -106,6 +111,8 @@ func handleBufferData(buffer []byte, n int, addr net.Addr) {
 			SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
 			time.Sleep(1 * time.Second)
 			SendUDPMessage(udpmessages.ActivatePanles(buffer))
+			time.Sleep(1 * time.Second)
+			SendUDPMessage(udpmessages.SavePanles(buffer))
 			time.Sleep(1 * time.Second)
 			fmt.Println("Finish Registration")
 			time.Sleep(1 * time.Second)
