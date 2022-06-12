@@ -19,12 +19,12 @@ import (
 
 var (
 	dpiImage      = flag.Float64("dpiImage", 144, "screen resolution in Dots Per Inch")
-	fontfileImage = flag.String("fontfileImage", "static/fonts/FIXED_BO.ttf", "filename of the ttf font")
+	fontfileImage = flag.String("fontfileImage", "static/fonts/fixed_bold.ttf", "filename of the ttf font")
 	sizeImage     = flag.Float64("sizeImage", 16, "font size in points")
 	debug         = flag.Bool("debug", false, "debug mode")
 )
 
-//go:embed static/fonts/FIXED_BO.ttf
+//go:embed static/fonts/fixed_bold.ttf
 var embedContent embed.FS
 
 //https://stackoverflow.com/questions/38299930/how-to-add-a-simple-text-label-to-an-image-in-go
