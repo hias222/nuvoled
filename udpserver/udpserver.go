@@ -14,15 +14,26 @@ var udpSource *net.UDPAddr
 var udpDestination *net.UDPAddr
 var listenConnection *net.UDPConn
 var working bool
+var register bool
 
-func TestMe() string {
-	return "Start Test Call .."
+func StartMessage(bc string, reg bool) string {
+	var Message = "Start laufanzeiger .."
+
+	if reg {
+		Message = Message + "\n # Registration of panles is on "
+	}
+
+	Message = Message + "\n # udp send to " + bc
+	Message = Message + "\n # usage: ./laufanzeiger -bc 169.254.255.255 -reg true "
+
+	return Message
 }
 
-func InitLocalUdpAdress(broadcast string) {
+func InitLocalUdpAdress(broadcast string, reg bool) {
 	PORT := ":2000"
 
 	working = false
+	register = reg
 
 	s, err := net.ResolveUDPAddr("udp4", PORT)
 	if err != nil {
@@ -83,18 +94,25 @@ func handleBufferData(buffer []byte, n int, addr net.Addr) {
 	if n > 3 && buffer[2] == 15 {
 		fmt.Println("Send Messages to panel ")
 		fmt.Print("-> ", string(addr.String()), "\n")
-		//SendUDPMessage(udpmessages.ResetPanles())
-		//time.Sleep(1 * time.Second)
-		//SendUDPMessage(udpmessages.RefreshPanles())
-		//time.Sleep(1 * time.Second)
-		//SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
+		if register {
+			SendUDPMessage(udpmessages.ResetPanles())
+			time.Sleep(2 * time.Second)
+		}
+
+		SendUDPMessage(udpmessages.RefreshPanles())
 		time.Sleep(1 * time.Second)
-		//SendUDPMessage(udpmessages.ActivatePanles(buffer))
-		time.Sleep(1 * time.Second)
+
+		if register {
+			SendUDPMessage(udpmessages.CreateRegisterMessage(buffer))
+			time.Sleep(1 * time.Second)
+			SendUDPMessage(udpmessages.ActivatePanles(buffer))
+			time.Sleep(1 * time.Second)
+			fmt.Println("Finish Registration")
+			time.Sleep(1 * time.Second)
+		}
 		//SendUDPMessage(udpmessages.TurnOnPanles(buffer))
 		//time.Sleep(1 * time.Second)
-		fmt.Println("Finish Registration")
-		time.Sleep(1 * time.Second)
+
 	}
 	working = false
 }

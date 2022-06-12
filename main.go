@@ -10,18 +10,18 @@ import (
 
 func main() {
 
-	bcPtr := flag.String("bc", "192.168.178.255", "broadcast address")
+	bcPtr := flag.String("bc", "169.254.255.255", "broadcast address")
+	regPtr := flag.Bool("reg", true, "broadcast address")
 	flag.Parse()
-	fmt.Println("-bc", *bcPtr)
 
 	//Start
-	fmt.Println(udpserver.TestMe())
+	fmt.Println(udpserver.StartMessage(*bcPtr, *regPtr))
 
 	// start MQTT
 	var c = mqttclient.IntClientMqtt()
 	mqttclient.StartCLientMqtt(c)
 
 	//UDP
-	udpserver.InitLocalUdpAdress(*bcPtr)
+	udpserver.InitLocalUdpAdress(*bcPtr, *regPtr)
 	udpserver.StartServer()
 }
