@@ -1,13 +1,13 @@
 package image
 
 import (
+	"embed"
 	"flag"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/png"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -18,12 +18,14 @@ import (
 )
 
 var (
-	dpiImage = flag.Float64("dpiImage", 144, "screen resolution in Dots Per Inch")
-	//fontfileImage = flag.String("fontfileImage", "static/fonts/UbuntuMono-R.ttf", "filename of the ttf font")
+	dpiImage      = flag.Float64("dpiImage", 144, "screen resolution in Dots Per Inch")
 	fontfileImage = flag.String("fontfileImage", "static/fonts/FIXED_BO.ttf", "filename of the ttf font")
 	sizeImage     = flag.Float64("sizeImage", 16, "font size in points")
 	debug         = flag.Bool("debug", false, "debug mode")
 )
+
+//go:embed static/fonts/FIXED_BO.ttf
+var embedContent embed.FS
 
 //https://stackoverflow.com/questions/38299930/how-to-add-a-simple-text-label-to-an-image-in-go
 
@@ -46,8 +48,9 @@ func addLabelFont(img *image.RGBA, x, y int, top string, button string) {
 
 	log.Println("addLabelFont")
 
-	// Read the font data.
-	fontBytes, err := ioutil.ReadFile(*fontfileImage)
+	// Read the font data from embed
+	fontBytes, err := embedContent.ReadFile(*fontfileImage)
+	//fontBytes, err := ioutil.ReadFile(mebedContent)
 	if err != nil {
 		log.Println(err)
 		return
