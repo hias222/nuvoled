@@ -12,7 +12,7 @@ func main() {
 
 	bcPtr := flag.String("bc", "169.254.255.255", "broadcast address")
 	ipPtr := flag.Bool("ip", true, "local ip address")
-	regPtr := flag.Bool("reg", true, "broadcast address")
+	regPtr := flag.Bool("reg", false, "broadcast address")
 	flag.Parse()
 
 	//Start
