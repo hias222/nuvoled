@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"time"
 
 	"swimdata.de/nuvoled/mqttclient"
 	"swimdata.de/nuvoled/udpserver"
@@ -35,10 +36,25 @@ func main() {
 	}
 
 	// start MQTT
-	var c = mqttclient.IntClientMqtt(*mqttSrv)
-	mqttclient.StartCLientMqtt(c)
+
+	for i := 0; i < 30; i++ {
+		fmt.Println("Init Mqtt ... ")
+		var c, err = mqttclient.IntClientMqtt(*mqttSrv)
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("Waiting 30s")
+			time.Sleep(30 * time.Second)
+		} else {
+			fmt.Println("Waiting on mqtt ... ")
+			mqttclient.StartCLientMqtt(c)
+			fmt.Println("MQTT connected ")
+			break
+		}
+	}
 
 	//UDP
+
+	fmt.Println("Starting UDP")
 	udpserver.InitLocalUdpAdress(*bcPtr, *regPtr, locallistenAddr)
 	udpserver.StartServer()
 }

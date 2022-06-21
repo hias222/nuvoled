@@ -1,6 +1,7 @@
 package mqttclient
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -25,7 +26,7 @@ var getData MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
 	mqtttoudpclient.SendUDPMessage(data)
 }
 
-func IntClientMqtt(mqttserver string) MQTT.Client {
+func IntClientMqtt(mqttserver string) (MQTT.Client, error) {
 	//create a ClientOptions struct setting the broker address, clientid, turn
 	//off trace output and set the default message handler
 	if mqttserver != "" {
@@ -38,10 +39,11 @@ func IntClientMqtt(mqttserver string) MQTT.Client {
 	//create and start a client using the above ClientOptions
 	c := MQTT.NewClient(opts)
 	if token := c.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
+		//panic(token.Error())
+		return nil, errors.New(token.Error().Error())
 	}
 
-	return c
+	return c, nil
 
 }
 
