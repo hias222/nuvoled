@@ -32,6 +32,9 @@ func IntClientMqtt(mqttserver string) (MQTT.Client, error) {
 	if mqttserver != "" {
 		mqttServer = mqttserver
 	}
+
+	fmt.Println("connect to tcp://" + mqttServer + ":1883")
+	fmt.Println("please check if it is tcp4")
 	opts := MQTT.NewClientOptions().AddBroker("tcp://" + mqttServer + ":1883")
 	opts.SetClientID("go-simple")
 	opts.SetDefaultPublishHandler(f)
