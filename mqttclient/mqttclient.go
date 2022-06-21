@@ -25,9 +25,12 @@ var getData MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
 	mqtttoudpclient.SendUDPMessage(data)
 }
 
-func IntClientMqtt() MQTT.Client {
+func IntClientMqtt(mqttserver string) MQTT.Client {
 	//create a ClientOptions struct setting the broker address, clientid, turn
 	//off trace output and set the default message handler
+	if mqttserver != "" {
+		mqttServer = mqttserver
+	}
 	opts := MQTT.NewClientOptions().AddBroker("tcp://" + mqttServer + ":1883")
 	opts.SetClientID("go-simple")
 	opts.SetDefaultPublishHandler(f)

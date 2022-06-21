@@ -8,7 +8,7 @@ import (
 )
 
 func TestMqttClient(t *testing.T) {
-	var c = mqttclient.IntClientMqtt()
+	var c = mqttclient.IntClientMqtt("localhost")
 	mqttclient.TestClientMqtt(c)
 	t.Log("End MQTT")
 }
