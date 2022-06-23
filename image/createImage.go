@@ -122,3 +122,36 @@ func CreateImageRGBA(event string, heat string) []byte {
 	}
 	return myImg.Pix
 }
+
+func GetInitImageRGBA() []byte {
+
+	infile, err := os.Open("image/base/logo_128_128.png")
+	if err != nil {
+		// replace this with real error handling
+		panic(err.Error())
+	}
+	//defer infile.Close()
+
+	src, err := png.Decode(infile)
+	if err != nil {
+		// replace this with real error handling
+		panic(err.Error())
+	}
+
+	b := src.Bounds()
+	myImg := image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
+	draw.Draw(myImg, myImg.Bounds(), src, b.Min, draw.Src)
+
+	if *debug {
+		fmt.Printf("myImg: %v\n", myImg)
+		out, err := os.Create("start.png")
+		png.Encode(out, myImg)
+		out.Close()
+
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	return myImg.Pix
+}

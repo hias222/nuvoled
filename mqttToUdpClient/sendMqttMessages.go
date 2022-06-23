@@ -38,15 +38,7 @@ func generateFrameSyncMessage(frame int) []byte {
 
 }
 
-func sendEventMessage(event string, heat string) {
-
-	framenumber++
-	// add frame
-	if framenumber > 255 {
-		framenumber = 1
-	}
-
-	var byteRGBA = image.CreateImageRGBA(event, heat)
+func SendUDPData(byteRGBA []byte, framenumber int) {
 
 	buffer := make([]byte, 1450)
 
@@ -90,12 +82,47 @@ func sendEventMessage(event string, heat string) {
 	udpserver.SendUDPListenMessage(buffer)
 	// Ende
 	time.Sleep(10 * time.Millisecond)
-	//udpmessages.BufferToString(generateFrameSyncMessage(framenumber-1), 15)
 	udpserver.SendUDPListenMessage(generateFrameSyncMessage(framenumber - 1))
 	time.Sleep(30 * time.Millisecond)
-	//udpmessages.BufferToString(generateFrameSyncMessage(framenumber), 15)
 	udpserver.SendUDPListenMessage(generateFrameSyncMessage(framenumber))
 	row = 0
+
+}
+
+func sendEventMessage(event string, heat string) {
+
+	framenumber++
+	// add frame
+	if framenumber > 255 {
+		framenumber = 1
+	}
+
+	var byteRGBA = image.CreateImageRGBA(event, heat)
+
+	fmt.Println(event)
+
+	if event == "W 0" {
+		SendUDPStartMessage()
+		fmt.Println("Start Message")
+	} else {
+		SendUDPData(byteRGBA, framenumber)
+	}
+
+}
+
+func SendUDPStartMessage() {
+
+	framenumber++
+	// add frame
+	if framenumber > 255 {
+		framenumber = 1
+	}
+
+	time.Sleep(1000 * time.Millisecond)
+
+	var byteRGBA = image.GetInitImageRGBA()
+
+	SendUDPData(byteRGBA, framenumber)
 
 }
 
