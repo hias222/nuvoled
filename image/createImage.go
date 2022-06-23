@@ -1,6 +1,7 @@
 package image
 
 import (
+	"bytes"
 	"embed"
 	"flag"
 	"fmt"
@@ -25,6 +26,7 @@ var (
 )
 
 //go:embed static/fonts/fixed_bold.ttf
+//go:embed base/logo_128_128.png
 var embedContent embed.FS
 
 //https://stackoverflow.com/questions/38299930/how-to-add-a-simple-text-label-to-an-image-in-go
@@ -125,17 +127,17 @@ func CreateImageRGBA(event string, heat string) []byte {
 
 func GetInitImageRGBA() []byte {
 
-	infile, err := os.Open("image/base/logo_128_128.png")
-	if err != nil {
-		// replace this with real error handling
-		panic(err.Error())
-	}
-	//defer infile.Close()
+	infile, err := embedContent.ReadFile("base/logo_128_128.png")
 
-	src, err := png.Decode(infile)
 	if err != nil {
 		// replace this with real error handling
-		panic(err.Error())
+		return nil
+	}
+
+	src, err := png.Decode(bytes.NewReader(infile))
+	if err != nil {
+		// replace this with real error handling
+		return nil
 	}
 
 	b := src.Bounds()
