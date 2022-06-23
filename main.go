@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
 	"swimdata.de/nuvoled/mqttclient"
 	"swimdata.de/nuvoled/udpserver"
 )
@@ -56,7 +55,7 @@ func main() {
 
 	//UDP
 
-	go mqtttoudpclient.SendUDPStartMessage()
+	//go mqtttoudpclient.SendUDPStartMessage()
 
 	fmt.Println("Starting UDP")
 	udpserver.InitLocalUdpAdress(*bcPtr, *regPtr, locallistenAddr)

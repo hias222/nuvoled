@@ -3,7 +3,9 @@ package mqttclient
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"os"
+	"strconv"
 	"time"
 
 	MQTT "github.com/eclipse/paho.mqtt.golang"
@@ -36,7 +38,11 @@ func IntClientMqtt(mqttserver string) (MQTT.Client, error) {
 	fmt.Println("connect to tcp://" + mqttServer + ":1883")
 	fmt.Println("please check if it is tcp4")
 	opts := MQTT.NewClientOptions().AddBroker("tcp://" + mqttServer + ":1883")
-	opts.SetClientID("go-simple")
+
+	clientid := strconv.Itoa(rand.Int())
+	fmt.Println("client ", clientid)
+
+	opts.SetClientID(clientid)
 	opts.SetDefaultPublishHandler(f)
 
 	//create and start a client using the above ClientOptions
