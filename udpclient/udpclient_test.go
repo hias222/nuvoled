@@ -20,9 +20,10 @@ func TestUdpUnicast(t *testing.T) {
 
 func TestUdpMulticast(t *testing.T) {
 
-	SERVER := "192.168.178.175"
+	//SERVER := "192.168.178.175"
 	//SERVER := "10.10.10.255"
 	//SERVER := "169.254.255.255"
+	SERVER := "127.0.0.1"
 
 	var testdata = "fail"
 
