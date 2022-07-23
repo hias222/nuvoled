@@ -22,48 +22,28 @@ MFU@QM-MOS-MFU nuvoled % sudo arp 169.254.23.49
 */
 
 import (
-	"net"
+	"fmt"
 	"testing"
+
+	"swimdata.de/nuvoled/udpserver"
 )
 
 func TestUdpserver(t *testing.T) {
-	//if udpserver.TestMe() != "test" {
-	//	t.Fatal("error")
-	//}
 
-	CONNECT := "127.0.0.1:2000"
-	MESSAGE := "$$J1P4S"
+	bcPtr := "169.254.255.255"
+	ipPtr := true       // "local ip address")
+	regPtr := false     //, "broadcast address")
+	mqttSrv := "ubuntu" //", "mqtt server name")
 
-	t.Log("conect to ", CONNECT)
+	fmt.Println(udpserver.StartMessage(bcPtr, regPtr, ipPtr, mqttSrv))
 
-	s, err := net.ResolveUDPAddr("udp4", CONNECT)
-	c, err := net.DialUDP("udp4", nil, s)
-	if err != nil {
-		t.Fatal(err)
-		return
-	}
+	locallistenAddr := "127.0.0.1"
 
-	t.Log("the UDP Server is ", c.RemoteAddr().String())
+	udpserver.InitLocalUdpAdress(bcPtr, regPtr, locallistenAddr)
+	fmt.Println("Starting Server")
+	udpserver.StartServer()
+	//udpserver.StartSimple()
 
-	defer c.Close()
-
-	data := []byte(MESSAGE)
-
-	_, err = c.Write(data)
-
-	buffer := make([]byte, 1024)
-	n, _, err := c.ReadFromUDP(buffer)
-	if err != nil {
-		t.Log(err)
-		return
-	}
-
-	t.Log("Reply:", string(buffer[0:n]))
-
-	if string(buffer[0:n]) != "hello" {
-		t.Log("error")
-		return
-	}
 	t.Fatal("test")
 
 }

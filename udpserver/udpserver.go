@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -126,10 +127,16 @@ func handleBufferData(buffer []byte, n int, addr net.Addr) {
 
 func StartServer() {
 
-	Connection, err := net.ListenUDP("udp4", udpSource)
+	udpSource2, err := net.ResolveUDPAddr("udp", ":2000")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
+	Connection, err := net.ListenUDP("udp4", udpSource2)
+	fmt.Println(udpSource2)
 
 	listenConnection = Connection
-
 	listenConnection.SetReadBuffer(1048576)
 
 	if err != nil {
@@ -137,9 +144,7 @@ func StartServer() {
 	}
 
 	//defer listenConnection.Close()
-
 	buffer := make([]byte, 2048)
-
 	rand.Seed(time.Now().Unix())
 
 	for {
@@ -155,7 +160,5 @@ func StartServer() {
 		}
 
 		go handleBufferData(buffer, n, addr)
-
 	}
-
 }

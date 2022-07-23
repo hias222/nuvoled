@@ -54,7 +54,6 @@ func main() {
 	}
 
 	//UDP
-
 	//go mqtttoudpclient.SendUDPStartMessage()
 
 	fmt.Println("Starting UDP")
