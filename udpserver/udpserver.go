@@ -30,6 +30,7 @@ func StartMessage(bc string, reg bool, ip bool, mqttSrv string) string {
 	Message = Message + "\n # udp send to " + bc
 	Message = Message + "\n # local ip (empty listen an all) " + strconv.FormatBool(ip)
 	Message = Message + "\n # usage: ./laufanzeiger -bc 169.254.255.255 -reg=false/true -ip=true/false -mqtt localhost "
+	Message = Message + "\n # usage: ./laufanzeiger -recv=false/true "
 	Message = Message + "\n\n # to work with multiple interfaces use local IP - reg is not possible with IP " + strconv.FormatBool(ip)
 	Message = Message + "\n"
 	return Message

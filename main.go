@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"swimdata.de/nuvoled/mqttclient"
+	"swimdata.de/nuvoled/traffic"
+	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
 )
 
@@ -16,7 +18,19 @@ func main() {
 	regPtr := flag.Bool("reg", false, "broadcast address")
 	mqttSrv := flag.String("mqtt", "localhost", "mqtt server name")
 
+	var recvMode = flag.Bool("recv", false, "receive check")
+
 	flag.Parse()
+
+	// base parameter
+	udpmessages.SetParameter(false, false)
+
+	if *recvMode {
+		fmt.Println("Receive Mode")
+		udpmessages.SetParameter(true, true)
+
+		traffic.Read(true)
+	}
 
 	//Start
 	fmt.Println(udpserver.StartMessage(*bcPtr, *regPtr, *ipPtr, *mqttSrv))
