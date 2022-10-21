@@ -84,7 +84,7 @@ func SendUDPListenMessage(data []byte) {
 
 }
 
-func handleBufferData(buffer []byte, n int, addr net.Addr) {
+func handleBufferData(buffer []byte, n int, addr net.Addr, sendaction bool) {
 	udpmessages.BufferToString(buffer, n)
 	if working {
 		return
@@ -98,7 +98,7 @@ func handleBufferData(buffer []byte, n int, addr net.Addr) {
 		return
 	}
 
-	if n > 3 && buffer[2] == 15 {
+	if n > 3 && buffer[2] == 15 && sendaction {
 		fmt.Println("Send Messages to panel ")
 		fmt.Print("-> ", string(addr.String()), "\n")
 		if register {
@@ -142,11 +142,14 @@ func StartServer() {
 
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(0)
 	}
 
 	//defer listenConnection.Close()
 	buffer := make([]byte, 2048)
 	rand.Seed(time.Now().Unix())
+
+	fmt.Println("Start listening")
 
 	for {
 		n, addr, err := listenConnection.ReadFromUDP(buffer)
@@ -160,6 +163,6 @@ func StartServer() {
 			fmt.Println("broken")
 		}
 
-		go handleBufferData(buffer, n, addr)
+		go handleBufferData(buffer, n, addr, false)
 	}
 }

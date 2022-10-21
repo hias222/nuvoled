@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"time"
 
 	"swimdata.de/nuvoled/mqttclient"
@@ -23,14 +24,17 @@ func main() {
 	flag.Parse()
 
 	// base parameter
-	udpmessages.SetParameter(false, false)
+	udpmessages.SetParameter(false, false, false)
 
 	if *recvMode {
 		fmt.Println("Receive Mode")
-		udpmessages.SetParameter(true, true)
+		udpmessages.SetParameter(false, false, true)
 
 		traffic.Read(true)
+		os.Exit(0)
 	}
+
+	fmt.Println("Normal Mode")
 
 	//Start
 	fmt.Println(udpserver.StartMessage(*bcPtr, *regPtr, *ipPtr, *mqttSrv))
