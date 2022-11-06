@@ -24,7 +24,7 @@ func main() {
 	flag.Parse()
 
 	// base parameter
-	udpmessages.SetParameter(false, false, false)
+	udpmessages.SetParameter(true, false, false)
 
 	if *recvMode {
 		fmt.Println("Receive Mode")
