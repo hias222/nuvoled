@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"swimdata.de/nuvoled/image"
+	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
 )
 
@@ -78,7 +79,7 @@ func SendUDPData(byteRGBA []byte, framenumber int) {
 		bufferend[i] = 0
 	}
 
-	//udpmessages.BufferToString(bufferend, 1450)
+	udpmessages.BufferToString(bufferend, 1450)
 	udpserver.SendUDPListenMessage(buffer)
 	// Ende
 	time.Sleep(10 * time.Millisecond)
