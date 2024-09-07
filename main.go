@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"swimdata.de/nuvoled/mqttclient"
-	"swimdata.de/nuvoled/sendclock"
 	"swimdata.de/nuvoled/traffic"
 	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
@@ -26,7 +25,6 @@ func main() {
 
 	// base parameter
 	udpmessages.SetParameter(false, false, false)
-	sendclock.SetParameter(true)
 
 	if *recvMode {
 		fmt.Println("Receive Mode")
@@ -75,6 +73,8 @@ func main() {
 
 	//UDP
 	//go mqtttoudpclient.SendUDPStartMessage()
+
+	go mqttclient.StartClock()
 
 	fmt.Println("Starting UDP")
 	udpserver.InitLocalUdpAdress(*bcPtr, *regPtr, locallistenAddr)

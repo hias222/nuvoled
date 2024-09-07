@@ -72,6 +72,55 @@ func StartCLientMqtt(client MQTT.Client) {
 
 }
 
+func SubscribeMqtt(client MQTT.Client) {
+	var c = client
+
+	//subscribe to the topic /go-mqtt/sample and request messages to be delivered
+	//at a maximum qos of zero, wait for the receipt to confirm the subscription
+	if token := c.Subscribe(mqttTopic, 0, nil); token.Wait() && token.Error() != nil {
+		fmt.Println(token.Error())
+		os.Exit(1)
+	}
+
+}
+
+func SendMessageMqtt(client MQTT.Client, message string) {
+
+	var c = client
+
+	/*
+		//subscribe to the topic /go-mqtt/sample and request messages to be delivered
+		//at a maximum qos of zero, wait for the receipt to confirm the subscription
+		if token := c.Subscribe(mqttTopic, 0, nil); token.Wait() && token.Error() != nil {
+			fmt.Println(token.Error())
+			os.Exit(1)
+		}
+	*/
+
+	//Publish 5 messages to /go-mqtt/sample at qos 1 and wait for the receipt
+	//from the server after sending each message
+
+	text := message
+	token := c.Publish(mqttTopic, 0, false, text)
+	token.Wait()
+
+	//unsubscribe from /go-mqtt/sample
+
+	//c.Disconnect(250)
+}
+
+func DisconnetMqtt(client MQTT.Client) {
+
+	var c = client
+
+	if token := c.Unsubscribe(mqttTopic); token.Wait() && token.Error() != nil {
+		fmt.Println(token.Error())
+		os.Exit(1)
+	}
+
+	c.Disconnect(250)
+}
+
 func TestClientMqtt(client MQTT.Client) {
 
 	var c = client

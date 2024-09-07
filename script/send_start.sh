@@ -22,8 +22,12 @@ create_random_time() {
     RANDOM_TIME=${minutes}:${seconds},${ms}
 }
 
+send_raw_message "header 0 0"
+
+sleep 2
+
 send_raw_message clock
-sleep 1
+sleep 2
 
 send_raw_message "header 0 0"
 

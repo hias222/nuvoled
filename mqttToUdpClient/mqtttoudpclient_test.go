@@ -2,12 +2,11 @@ package mqtttoudpclient_test
 
 import (
 	"testing"
-
-	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
 )
 
 func TestSendMQTT(t *testing.T) {
-	b := []byte("header 001 001")
-	mqtttoudpclient.SendUDPMessage(b)
+	//b := []byte("header 001 001")
+
+	// SendUDPMessage(b)
 	t.Fail()
 }

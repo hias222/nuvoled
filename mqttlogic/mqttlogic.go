@@ -5,10 +5,12 @@ import (
 	"strings"
 
 	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
+	"swimdata.de/nuvoled/sendclock"
 )
 
-func SendClock() {
+func sendClock() {
 	fmt.Println("xlock")
+	sendclock.SendClock()
 }
 
 func getMessageType(message string) string {
@@ -48,7 +50,7 @@ func SendUDPMessage(data []byte) {
 	} else if messagetype == "clock" {
 		fmt.Println("--> clock")
 
-		SendClock()
+		sendClock()
 
 		//sendclock.SendClock()
 	} else {

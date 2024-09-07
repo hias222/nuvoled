@@ -3,17 +3,10 @@ package sendclock
 import (
 	"fmt"
 
-	"swimdata.de/nuvoled/image"
 	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
 )
 
 var framenumber int
-
-var details bool
-
-func SetParameter(details bool) {
-	details = details
-}
 
 func SendClock() {
 
@@ -24,7 +17,8 @@ func SendClock() {
 	}
 
 	fmt.Println("Clock start")
-	var byteRGBA = image.GetInitImageRGBA()
+
+	var byteRGBA = createImageRGBA()
 	mqtttoudpclient.SendUDPData(byteRGBA, framenumber)
 
 }
