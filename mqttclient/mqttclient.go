@@ -9,13 +9,13 @@ import (
 	"time"
 
 	MQTT "github.com/eclipse/paho.mqtt.golang"
-	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
+	"swimdata.de/nuvoled/mqttlogic"
 )
 
 var mqttServer = "localhost"
 var mqttTopic = "rawdata"
 
-//define a function for the default message handler
+// define a function for the default message handler
 var f MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
 	fmt.Printf("TOPIC: %s\n", msg.Topic())
 	fmt.Printf("MSG: %s\n", msg.Payload())
@@ -25,7 +25,10 @@ var getData MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
 	fmt.Printf("TOPIC: %s\n", msg.Topic())
 	fmt.Printf("MSG: %s\n", msg.Payload())
 	data := []byte(msg.Payload())
-	mqtttoudpclient.SendUDPMessage(data)
+
+	mqttlogic.SendUDPMessage(data)
+
+	//mqtttoudpclient.SendUDPMessage(data)
 }
 
 func IntClientMqtt(mqttserver string) (MQTT.Client, error) {

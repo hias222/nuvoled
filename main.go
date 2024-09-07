@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"swimdata.de/nuvoled/mqttclient"
+	"swimdata.de/nuvoled/sendclock"
 	"swimdata.de/nuvoled/traffic"
 	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
@@ -24,7 +25,8 @@ func main() {
 	flag.Parse()
 
 	// base parameter
-	udpmessages.SetParameter(true, false, false)
+	udpmessages.SetParameter(false, false, false)
+	sendclock.SetParameter(true)
 
 	if *recvMode {
 		fmt.Println("Receive Mode")

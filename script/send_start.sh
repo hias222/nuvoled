@@ -23,6 +23,10 @@ create_random_time() {
 }
 
 send_raw_message clock
-sleep 
+sleep 1
 
 send_raw_message "header 0 0"
+
+sleep 3
+
+send_raw_message "header 1 1"

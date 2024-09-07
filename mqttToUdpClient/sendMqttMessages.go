@@ -2,7 +2,6 @@ package mqtttoudpclient
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"swimdata.de/nuvoled/image"
@@ -90,7 +89,7 @@ func SendUDPData(byteRGBA []byte, framenumber int) {
 
 }
 
-func sendEventMessage(event string, heat string) {
+func SendEventMessage(event string, heat string) {
 
 	framenumber++
 	// add frame
@@ -124,44 +123,5 @@ func SendUDPStartMessage() {
 	var byteRGBA = image.GetInitImageRGBA()
 
 	SendUDPData(byteRGBA, framenumber)
-
-}
-
-func getMessageType(message string) string {
-	strParts := strings.Split(message, " ")
-	if len(strParts) > 0 {
-		return strParts[0]
-	}
-	return ""
-}
-
-func getEvent(message string) string {
-	strParts := strings.Split(message, " ")
-	if len(strParts) > 1 {
-		return strParts[1]
-	}
-	return "000"
-}
-
-func getHeat(message string) string {
-	strParts := strings.Split(message, " ")
-	if len(strParts) > 2 {
-		return strParts[2]
-	}
-	return "000"
-}
-
-func SendUDPMessage(data []byte) {
-	// input Message like header 001 001
-	var message = string(data)
-	var messagetype = getMessageType(message)
-	if messagetype == "header" {
-		event := "W " + getEvent(message)
-		heat := "L " + getHeat(message)
-		fmt.Println("--> header event with ", event, " - ", heat)
-		sendEventMessage(event, heat)
-	} else {
-		fmt.Println("unknown ", messagetype)
-	}
 
 }
