@@ -6,7 +6,7 @@ import (
 	"image/draw"
 )
 
-func createImageRGBA() []byte {
+func createImageRGBA(second int) []byte {
 
 	myImg := image.NewRGBA(image.Rect(0, 0, 128, 128))
 
@@ -20,10 +20,8 @@ func createImageRGBA() []byte {
 		myImg.SetRGBA(x, 11, color.RGBA{255, 255, 255, 255})
 	}
 
-	var colBLUE = color.RGBA{0, 0, 255, 255}
-
 	// draw line
-	DrawLine(myImg, 14, 71, 100, 100, colBLUE)
+	addsecondspointer(myImg, second)
 
 	//udpmessages.BufferToString(myImg.Pix, 10024)
 

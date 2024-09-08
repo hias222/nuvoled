@@ -8,7 +8,7 @@ import (
 
 var framenumber int
 
-func SendClock() {
+func SendClock(second int) {
 
 	framenumber++
 	// add frame
@@ -16,9 +16,9 @@ func SendClock() {
 		framenumber = 1
 	}
 
-	fmt.Println("Clock start")
+	fmt.Printf("Clock start % d ", second)
 
-	var byteRGBA = createImageRGBA()
+	var byteRGBA = createImageRGBA(second)
 	mqtttoudpclient.SendUDPData(byteRGBA, framenumber)
 
 }

@@ -28,7 +28,7 @@ func StartClock() {
 
 	startTicker(c)
 	fmt.Println("Started Clock")
-	time.Sleep(22 * time.Second)
+	time.Sleep(70 * time.Second)
 	stopTicker()
 	fmt.Println("Stop Clock")
 

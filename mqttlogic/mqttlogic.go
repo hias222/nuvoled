@@ -2,15 +2,15 @@ package mqttlogic
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
 	"swimdata.de/nuvoled/sendclock"
 )
 
-func sendClock() {
-	fmt.Println("xlock")
-	sendclock.SendClock()
+func sendClock(second int) {
+	sendclock.SendClock(second)
 }
 
 func getMessageType(message string) string {
@@ -27,6 +27,18 @@ func getEvent(message string) string {
 		return strParts[1]
 	}
 	return "000"
+}
+
+func getSecond(message string) int {
+	strParts := strings.Split(message, " ")
+	if len(strParts) > 1 {
+		i, err := strconv.Atoi(strParts[1])
+		if err != nil {
+			return 0
+		}
+		return i
+	}
+	return 0
 }
 
 func getHeat(message string) string {
@@ -48,9 +60,10 @@ func SendUDPMessage(data []byte) {
 		mqtttoudpclient.SendEventMessage(event, heat)
 
 	} else if messagetype == "clock" {
-		fmt.Println("--> clock")
+		i := getSecond(message)
+		fmt.Printf("--> clock %d", i)
 
-		sendClock()
+		sendClock(i)
 
 		//sendclock.SendClock()
 	} else {
