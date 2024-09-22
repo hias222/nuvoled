@@ -2,6 +2,7 @@ package udpserver
 
 import (
 	"fmt"
+	"log/slog"
 	"math/rand"
 	"net"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"swimdata.de/nuvoled/logging"
 	"swimdata.de/nuvoled/udpmessages"
 )
 
@@ -18,7 +20,10 @@ var listenConnection *net.UDPConn
 var working bool
 var register bool
 
+var logger = logging.GetLogger()
+
 func StartMessage(bc string, reg bool, ip bool, mqttSrv string) string {
+
 	var Message = "Start laufanzeiger .."
 
 	if reg {
@@ -36,7 +41,7 @@ func StartMessage(bc string, reg bool, ip bool, mqttSrv string) string {
 	return Message
 }
 
-func InitLocalUdpAdress(broadcast string, reg bool, localip string) {
+func InitLocalUdpAdress(broadcast string, reg bool, localip string, logger slog.Logger) {
 	PORT := localip + ":2000"
 
 	working = false
@@ -49,7 +54,7 @@ func InitLocalUdpAdress(broadcast string, reg bool, localip string) {
 
 	udpSource = s
 
-	fmt.Println("Local Listener Address: ", s.String())
+	logger.Info("Local Listener Address: " + s.String())
 
 	//SENDERPORT := "169.254.255.255:2000"
 	SENDERPORT := broadcast + ":2000"
@@ -59,7 +64,7 @@ func InitLocalUdpAdress(broadcast string, reg bool, localip string) {
 		fmt.Println(err)
 	}
 	udpDestination = sender
-	fmt.Println("UDP Detination Address: ", sender.String())
+	logger.Info("UDP Detination Address: " + sender.String())
 
 }
 
@@ -135,7 +140,7 @@ func StartServer() {
 	}
 
 	Connection, err := net.ListenUDP("udp4", udpSource2)
-	fmt.Println(udpSource2)
+	logger.Info(string(udpSource2.IP) + ":" + string(udpSource2.Port))
 
 	listenConnection = Connection
 	listenConnection.SetReadBuffer(1048576)
@@ -149,7 +154,7 @@ func StartServer() {
 	buffer := make([]byte, 2048)
 	rand.Seed(time.Now().Unix())
 
-	fmt.Println("Start listening")
+	logger.Info("Start listening")
 
 	for {
 		n, addr, err := listenConnection.ReadFromUDP(buffer)
@@ -160,7 +165,7 @@ func StartServer() {
 		}
 
 		if listenConnection == nil {
-			fmt.Println("broken")
+			logger.Error("broken")
 		}
 
 		go handleBufferData(buffer, n, addr, false)

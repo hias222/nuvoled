@@ -9,21 +9,23 @@ import (
 	"time"
 
 	MQTT "github.com/eclipse/paho.mqtt.golang"
+	"swimdata.de/nuvoled/logging"
 	"swimdata.de/nuvoled/mqttlogic"
 )
 
 var mqttServer = "localhost"
 var mqttTopic = "rawdata"
+var logger = logging.GetLogger()
 
 // define a function for the default message handler
 var f MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
-	fmt.Printf("TOPIC: %s\n", msg.Topic())
-	fmt.Printf("MSG: %s\n", msg.Payload())
+	logger.Debug("TOPIC: " + msg.Topic())
+	logger.Debug("MSG: " + string(msg.Payload()))
 }
 
 var getData MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
-	fmt.Printf("TOPIC: %s\n", msg.Topic())
-	fmt.Printf("MSG: %s\n", msg.Payload())
+	logger.Debug("TOPIC: " + msg.Topic())
+	logger.Debug("MSG: " + string(msg.Payload()))
 	data := []byte(msg.Payload())
 
 	mqttlogic.SendUDPMessage(data)
@@ -38,12 +40,12 @@ func IntClientMqtt(mqttserver string) (MQTT.Client, error) {
 		mqttServer = mqttserver
 	}
 
-	fmt.Println("connect to tcp://" + mqttServer + ":1883")
-	fmt.Println("please check if it is tcp4")
+	logger.Info("connect to tcp://" + mqttServer + ":1883")
+	logger.Info("please check if it is tcp4")
 	opts := MQTT.NewClientOptions().AddBroker("tcp://" + mqttServer + ":1883")
 
 	clientid := strconv.Itoa(rand.Int())
-	fmt.Println("client ", clientid)
+	logger.Info("client " + clientid)
 
 	opts.SetClientID(clientid)
 	opts.SetDefaultPublishHandler(f)

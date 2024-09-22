@@ -3,7 +3,6 @@ package image
 import (
 	"bufio"
 	"flag"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -110,5 +109,6 @@ func CreateImageFreeType() {
 		log.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("Wrote out.png OK.")
+
+	logger.Debug("Wrote out.png OK.")
 }

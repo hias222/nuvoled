@@ -16,7 +16,10 @@ import (
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
 	"golang.org/x/image/math/fixed"
+	"swimdata.de/nuvoled/logging"
 )
+
+var logger = logging.GetLogger()
 
 var (
 	dpiImage      = flag.Float64("dpiImage", 144, "screen resolution in Dots Per Inch")
@@ -48,7 +51,7 @@ func addLabelFont(img *image.RGBA, x, y int, top string, button string) {
 
 	flag.Parse()
 
-	log.Println("addLabelFont")
+	logger.Debug("addLabelFont")
 
 	// Read the font data from embed
 	fontBytes, err := embedContent.ReadFile(*fontfileImage)
@@ -101,7 +104,7 @@ func addLabelFont(img *image.RGBA, x, y int, top string, button string) {
 		return
 	}
 
-	log.Println("End Fonts Draw")
+	logger.Debug("End Fonts Draw")
 }
 
 func CreateImageRGBA(event string, heat string) []byte {

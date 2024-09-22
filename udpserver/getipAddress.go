@@ -75,7 +75,7 @@ func GetLocaladdress() string {
 			if len(ip) > 15 {
 				if ip[12] == 192 {
 					if ip[13] == 168 {
-						fmt.Println("found internal 192er ", ip)
+						logger.Info("found internal 192er " + string(ip))
 						return name
 					}
 				}

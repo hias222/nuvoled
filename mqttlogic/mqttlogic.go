@@ -1,13 +1,15 @@
 package mqttlogic
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
+	"swimdata.de/nuvoled/logging"
 	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
 	"swimdata.de/nuvoled/sendclock"
 )
+
+var logger = logging.GetLogger()
 
 func sendClock(second int) {
 	sendclock.SendClock(second)
@@ -56,18 +58,18 @@ func SendUDPMessage(data []byte) {
 	if messagetype == "header" {
 		event := "W " + getEvent(message)
 		heat := "L " + getHeat(message)
-		fmt.Println("--> header event with ", event, " - ", heat)
+		logger.Info("--> header event with " + event + " - " + heat)
 		mqtttoudpclient.SendEventMessage(event, heat)
 
 	} else if messagetype == "clock" {
 		i := getSecond(message)
-		fmt.Printf("--> clock %d", i)
+		logger.Debug("--> clock " + string(i))
 
 		sendClock(i)
 
 		//sendclock.SendClock()
 	} else {
-		fmt.Println("unknown ", messagetype)
+		logger.Info("unknown ", messagetype)
 	}
 
 }

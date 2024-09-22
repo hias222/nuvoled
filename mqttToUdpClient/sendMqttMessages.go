@@ -1,15 +1,17 @@
 package mqtttoudpclient
 
 import (
-	"fmt"
+	"strconv"
 	"time"
 
 	"swimdata.de/nuvoled/image"
+	"swimdata.de/nuvoled/logging"
 	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
 )
 
 var framenumber int
+var logger = logging.GetLogger()
 
 func generateFirst10Bytes(frame int, row int, nrpackages int, buffer []byte) {
 	//36 36 20 2 10 0 0 0 35 45 255 0 255
@@ -67,7 +69,7 @@ func SendUDPData(byteRGBA []byte, framenumber int) {
 
 	var nrpackages = linebytesnr/32 + 1
 	var linebytesnrcorrect = nrpackages * 32
-	fmt.Println("endbytes: ", linebytesnr, " need ", linebytesnrcorrect)
+	logger.Debug("endbytes: " + strconv.Itoa(linebytesnr) + " need " + strconv.Itoa(linebytesnrcorrect))
 
 	generateFirst10Bytes(framenumber, row, nrpackages, (buffer))
 	bufferend := make([]byte, linebytesnrcorrect)
@@ -99,11 +101,11 @@ func SendEventMessage(event string, heat string) {
 
 	var byteRGBA = image.CreateImageRGBA(event, heat)
 
-	fmt.Println(event)
+	logger.Debug(event)
 
 	if event == "W 0" {
 		SendUDPStartMessage()
-		fmt.Println("Start Message")
+		logger.Info("Start Message")
 	} else {
 		SendUDPData(byteRGBA, framenumber)
 	}
