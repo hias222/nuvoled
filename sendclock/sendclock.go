@@ -1,6 +1,8 @@
 package sendclock
 
 import (
+	"image"
+
 	"swimdata.de/nuvoled/logging"
 	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
 )
@@ -8,6 +10,7 @@ import (
 var logger = logging.GetLogger()
 
 var framenumber int
+var baseImage image.RGBA
 
 func SendClock(second int) {
 
@@ -19,7 +22,16 @@ func SendClock(second int) {
 
 	logger.Debug("Clock start " + string(second))
 
-	var byteRGBA = createImageRGBA(second)
-	mqtttoudpclient.SendUDPData(byteRGBA, framenumber)
+	if len(baseImage.Pix) == 0 {
+		baseImage = createBaseImage()
+		createBackgroundClock(&baseImage)
+	}
+
+	var byteRGBA2 = createBaseImage()
+	copy(byteRGBA2.Pix, baseImage.Pix)
+
+	createImageRGBA(&byteRGBA2, second)
+
+	mqtttoudpclient.SendUDPData(byteRGBA2.Pix, framenumber)
 
 }

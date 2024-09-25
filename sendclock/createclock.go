@@ -3,27 +3,41 @@ package sendclock
 import (
 	"image"
 	"image/color"
-	"image/draw"
 )
 
-func createImageRGBA(second int) []byte {
+func createBaseImage() image.RGBA {
 
 	myImg := image.NewRGBA(image.Rect(0, 0, 128, 128))
 
-	bgColor := color.RGBA{40, 100, 205, 0xff}
-	bg := image.NewUniform(bgColor)
+	/*
+		bgColor := color.RGBA{40, 100, 205, 0xff}
+		bg := image.NewUniform(bgColor)
 
-	draw.Draw(myImg, myImg.Bounds(), bg, image.Pt(0, 0), draw.Src)
+		//myImg := image.NewRGBA(image.Rect(0, 0, 128, 128))
 
-	for x := 10; x < myImg.Rect.Dx()-10; x++ {
-		myImg.SetRGBA(x, 10, color.RGBA{255, 255, 255, 255})
-		myImg.SetRGBA(x, 11, color.RGBA{255, 255, 255, 255})
-	}
+		draw.Draw(myImg, myImg.Bounds(), bg, image.Pt(0, 0), draw.Src)
+	*/
 
-	// draw line
-	addsecondspointer(myImg, second)
+	return *myImg
+}
+
+func createBackgroundClock(myImg *image.RGBA) {
 
 	//udpmessages.BufferToString(myImg.Pix, 10024)
 
-	return myImg.Pix
+	bgColor := color.RGBA{0, 0, 255, 0xff}
+
+	/*
+		for x := 20; x < myImg.Rect.Dx()-10; x++ {
+			myImg.SetRGBA(x, 50, bgColor)
+			myImg.SetRGBA(x, 51, bgColor)
+		}
+	*/
+
+	drawCircle(myImg, bgColor)
+
+}
+
+func createImageRGBA(myImg *image.RGBA, second int) {
+	addsecondspointer(myImg, second)
 }

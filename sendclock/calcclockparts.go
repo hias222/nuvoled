@@ -33,7 +33,7 @@ func addsecondspointer(img draw.Image, second int) {
 	startx := img.Bounds().Max.X / 2
 	starty := img.Bounds().Max.Y / 2
 
-	length := startx - 10
+	length := startx - 5
 
 	newpointer := pointervalues{
 		startx: startx,
@@ -47,4 +47,39 @@ func addsecondspointer(img draw.Image, second int) {
 	var colBLUE = color.RGBA{0, 0, 255, 255}
 	DrawLine(img, newpointer.startx, newpointer.starty, newpointer.endx, newpointer.endy, colBLUE)
 
+}
+
+func drawCircle(img draw.Image, c color.Color) {
+
+	startx := img.Bounds().Max.X / 2
+	starty := img.Bounds().Max.Y / 2
+	r := startx - 3
+
+	x0 := startx
+	y0 := starty
+
+	x, y, dx, dy := r-1, 0, 1, 1
+	err := dx - (r * 2)
+
+	for x > y {
+		img.Set(x0+x, y0+y, c)
+		img.Set(x0+y, y0+x, c)
+		img.Set(x0-y, y0+x, c)
+		img.Set(x0-x, y0+y, c)
+		img.Set(x0-x, y0-y, c)
+		img.Set(x0-y, y0-x, c)
+		img.Set(x0+y, y0-x, c)
+		img.Set(x0+x, y0-y, c)
+
+		if err <= 0 {
+			y++
+			err += dy
+			dy += 2
+		}
+		if err > 0 {
+			x--
+			dx += 2
+			err += dx - (r * 2)
+		}
+	}
 }

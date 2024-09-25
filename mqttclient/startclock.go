@@ -3,29 +3,29 @@ package mqttclient
 import (
 	"fmt"
 	"time"
-
-	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 var done = make(chan struct{})
 
 func StartClock() {
 
-	var c, err = IntClientMqtt("localhost")
+	//var c, err = IntClientMqtt("localhost")
 
-	if err != nil {
-		fmt.Println(err)
-		logger.Debug("Waiting 30s")
-		time.Sleep(30 * time.Second)
-	} else {
-		time.Sleep(1 * time.Second)
-		SubscribeMqtt(c)
-		SendMessageMqtt(c, "header 0 0")
-		time.Sleep(5 * time.Second)
-		DisconnetMqtt(c)
-	}
+	/*
+		if err != nil {
+			fmt.Println(err)
+			logger.Debug("Waiting 30s")
+			time.Sleep(30 * time.Second)
+		} else {
+			time.Sleep(1 * time.Second)
+			SubscribeMqtt(c)
+			SendMessageMqtt(c, "header 0 0")
+			time.Sleep(5 * time.Second)
+			DisconnetMqtt(c)
+		}
+	*/
 
-	startTicker(c)
+	startTicker()
 	logger.Info("Started Clock")
 	time.Sleep(70 * time.Second)
 	stopTicker()
@@ -33,7 +33,7 @@ func StartClock() {
 
 }
 
-func startTicker(c mqtt.Client) {
+func startTicker() {
 	ticker := time.NewTicker(1 * time.Second)
 
 	go func() {
@@ -42,7 +42,7 @@ func startTicker(c mqtt.Client) {
 
 		if err != nil {
 			fmt.Println(err)
-			logger.Error("Error Connecting")
+			logger.Error("Error Connecting MQTT Client")
 			return
 		} else {
 			logger.Info("Connected")
