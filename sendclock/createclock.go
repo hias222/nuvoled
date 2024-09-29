@@ -5,6 +5,16 @@ import (
 	"image/color"
 )
 
+var departure_time = 30
+var target_time = [5]int{13, 14, 15, 16, 16}
+
+//var logger = logging.GetLogger()
+
+func initBaseConfig(departure int, target [5]int) {
+	departure_time = departure
+	target_time = target
+}
+
 func createBaseImage() image.RGBA {
 
 	myImg := image.NewRGBA(image.Rect(0, 0, 128, 128))
@@ -23,21 +33,34 @@ func createBaseImage() image.RGBA {
 
 func createBackgroundClock(myImg *image.RGBA) {
 
-	//udpmessages.BufferToString(myImg.Pix, 10024)
-
 	bgColor := color.RGBA{0, 0, 255, 0xff}
-
-	/*
-		for x := 20; x < myImg.Rect.Dx()-10; x++ {
-			myImg.SetRGBA(x, 50, bgColor)
-			myImg.SetRGBA(x, 51, bgColor)
-		}
-	*/
+	bgColor5 := color.RGBA{0, 255, 255, 0xff}
 
 	drawCircle(myImg, bgColor)
+	drawLiniesOfCircle(myImg, bgColor, bgColor5)
 
 }
 
 func createImageRGBA(myImg *image.RGBA, second int) {
-	addsecondspointer(myImg, second)
+	//var colBLUE = color.RGBA{0, 0, 255, 255}
+	var colWhite = color.RGBA{255, 255, 255, 255}
+	var colGreen = color.RGBA{0, 50, 0, 255}
+	var colEnd = color.RGBA{255, 0, 0, 255}
+
+	startsecond := 0
+
+	drawTargetArea(myImg, colGreen, second, startsecond)
+
+	// start next
+	var start_time = departure_time + startsecond
+	if second > departure_time+startsecond {
+		var diff = second - departure_time - startsecond + 5
+		var anzahl = diff / 5
+		start_time += 5 * anzahl
+	}
+	addsecondspointer(myImg, start_time, colEnd)
+
+	// zeiger
+	addsecondspointer(myImg, second, colWhite)
+
 }
