@@ -27,7 +27,7 @@ func StartClock() {
 
 	startTicker()
 	logger.Info("Started Clock")
-	time.Sleep(70 * time.Second)
+	time.Sleep(300 * time.Second)
 	stopTicker()
 	logger.Info("Stop Clock")
 
