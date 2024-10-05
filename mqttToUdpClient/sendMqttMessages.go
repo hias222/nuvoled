@@ -6,14 +6,13 @@ import (
 
 	"swimdata.de/nuvoled/image"
 	"swimdata.de/nuvoled/logging"
-	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
 )
 
 var framenumber int
 var logger = logging.GetLogger()
 
-func generateFirst10Bytes(frame int, row int, nrpackages int, buffer []byte) {
+func generateFirst10Bytes(frame int, row int, rows int, nrpackages int, buffer []byte) {
 	//36 36 20 2 10 0 0 0 35 45 255 0 255
 	//..
 	// 36 36 20 2 10 0 6 0 35 45 255 0 255
@@ -25,7 +24,7 @@ func generateFirst10Bytes(frame int, row int, nrpackages int, buffer []byte) {
 	buffer[5] = 0
 	buffer[6] = byte(row)
 	buffer[7] = 0
-	buffer[8] = 35
+	buffer[8] = byte(rows)
 	buffer[9] = byte(nrpackages)
 }
 
@@ -42,10 +41,16 @@ func generateFrameSyncMessage(frame int) []byte {
 
 func SendUDPData(byteRGBA []byte, framenumber int) {
 
+	// bei 128 Zeilen ist Schluss, da muss man h füllen!!
+
 	buffer := make([]byte, 1450)
 
 	row := 0
 	linebytesnr := 10
+
+	calc_rows := int(len(byteRGBA)/4*3/1440) + 1
+
+	logger.Debug("length: " + strconv.Itoa(len(byteRGBA)) + " rows " + strconv.Itoa(calc_rows))
 
 	for i := 0; i < len(byteRGBA); i = i + 4 {
 
@@ -58,7 +63,7 @@ func SendUDPData(byteRGBA []byte, framenumber int) {
 
 		if linebytesnr > 1449 {
 			linebytesnr = 10
-			generateFirst10Bytes(framenumber, row, 45, (buffer))
+			generateFirst10Bytes(framenumber, row, calc_rows, 45, (buffer))
 			row++
 			//udpmessages.BufferToString(buffer, 1500)
 			//fmt.Printf("buffer: %v\n", buffer)
@@ -69,9 +74,9 @@ func SendUDPData(byteRGBA []byte, framenumber int) {
 
 	var nrpackages = linebytesnr/32 + 1
 	var linebytesnrcorrect = nrpackages * 32
-	logger.Debug("endbytes: " + strconv.Itoa(linebytesnr) + " need " + strconv.Itoa(linebytesnrcorrect))
+	logger.Debug("endbytes: " + strconv.Itoa(linebytesnr) + " need " + strconv.Itoa(linebytesnrcorrect) + " rows " + strconv.Itoa(row))
 
-	generateFirst10Bytes(framenumber, row, nrpackages, (buffer))
+	generateFirst10Bytes(framenumber, row, calc_rows, nrpackages, (buffer))
 	bufferend := make([]byte, linebytesnrcorrect)
 	for i := 0; i < linebytesnr; i++ {
 		bufferend[i] = buffer[i]
@@ -80,8 +85,8 @@ func SendUDPData(byteRGBA []byte, framenumber int) {
 		bufferend[i] = 0
 	}
 
-	udpmessages.BufferToString(bufferend, 1450)
-	udpserver.SendUDPListenMessage(buffer)
+	//udpmessages.BufferToString(bufferend, 1450)
+	udpserver.SendUDPListenMessage(bufferend)
 	// Ende
 	time.Sleep(10 * time.Millisecond)
 	udpserver.SendUDPListenMessage(generateFrameSyncMessage(framenumber - 1))

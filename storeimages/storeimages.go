@@ -1,7 +1,5 @@
 package storeimages
 
-import "fmt"
-
 type packageData struct {
 	framenr    byte
 	packagenrL byte
@@ -75,15 +73,15 @@ func SaveData(data []byte, length int) {
 }
 
 func storeData(data []packageData, frame byte) {
-	fmt.Print("frame ")
-	fmt.Print(frame)
-	fmt.Print(" length ")
-	fmt.Println(len(data))
+	//fmt.Print("frame ")
+	//fmt.Print(frame)
+	//fmt.Print(" length ")
+	//fmt.Println(len(data))
 
 	var framenummer byte = 0
 	for i := range data {
 		if framenummer != data[i].framenr {
-			fmt.Println(int(data[i].framenr))
+			//fmt.Println(int(data[i].framenr))
 			framenummer = data[i].framenr
 		}
 

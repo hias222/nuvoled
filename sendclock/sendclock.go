@@ -2,6 +2,7 @@ package sendclock
 
 import (
 	"image"
+	"image/draw"
 
 	"swimdata.de/nuvoled/logging"
 	mqtttoudpclient "swimdata.de/nuvoled/mqttToUdpClient"
@@ -27,11 +28,19 @@ func SendClock(second int) {
 		createBackgroundClock(&baseImage)
 	}
 
-	var byteRGBA2 = createBaseImage()
-	copy(byteRGBA2.Pix, baseImage.Pix)
+	var byteRGBA_clock_1 = createBaseImage()
+	copy(byteRGBA_clock_1.Pix, baseImage.Pix)
+	createImageRGBA(&byteRGBA_clock_1, second)
 
-	createImageRGBA(&byteRGBA2, second)
+	var byteRGBA_clock_2 = createBaseImage()
+	copy(byteRGBA_clock_2.Pix, baseImage.Pix)
+	createImageRGBA(&byteRGBA_clock_2, second)
 
-	mqtttoudpclient.SendUDPData(byteRGBA2.Pix, framenumber)
+	rgba := image.NewRGBA(image.Rect(0, 0, 128, 256))
+
+	draw.Draw(rgba, byteRGBA_clock_1.Bounds(), &byteRGBA_clock_1, image.Point{0, 0}, draw.Src)
+	draw.Draw(rgba, image.Rect(0, 128, 128, 256), &byteRGBA_clock_2, image.Point{0, 0}, draw.Src)
+
+	mqtttoudpclient.SendUDPData(rgba.Pix, framenumber)
 
 }
