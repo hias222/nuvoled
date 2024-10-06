@@ -7,16 +7,22 @@ import (
 )
 
 var departure_time = 55
-var target_time = [5]int{32, 33, 33, 40, 40}
 
-//var logger = logging.GetLogger()
+var target_time []int
 
-func initBaseConfig(departure int, target [5]int) {
+//var target_time = [5]int{32, 33, 33, 40, 40}
+
+func initBaseConfig(departure int, target []int) {
 	departure_time = departure
 	target_time = target
 }
 
 func createBaseImage() image.RGBA {
+
+	if len(target_time) < 1 {
+		var value int = departure_time - 20
+		target_time = []int{value, value, value, value, value}
+	}
 
 	myImg := image.NewRGBA(image.Rect(0, 0, 128, 128))
 
