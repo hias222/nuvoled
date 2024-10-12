@@ -29,15 +29,17 @@ func SendClock(second int) {
 		createBackgroundClock(&baseImage)
 	}
 
-	initBaseConfig(55, []int{35, 35, 35, 35, 35})
+	initBaseConfig(hiit_data.Lane[0].Runtime, hiit_data.Lane[0].Times)
 
 	var byteRGBA_clock_1 = createBaseImage()
 	copy(byteRGBA_clock_1.Pix, baseImage.Pix)
 	createImageRGBA(&byteRGBA_clock_1, second)
 
-	var departure_time = 60
-	var target_time = []int{40, 41, 42}
-	initBaseConfig(departure_time, target_time)
+	if len(hiit_data.Lane) > 1 {
+		initBaseConfig(hiit_data.Lane[1].Runtime, hiit_data.Lane[1].Times)
+	} else {
+		initBaseConfig(hiit_data.Lane[0].Runtime, hiit_data.Lane[0].Times)
+	}
 
 	var byteRGBA_clock_2 = createBaseImage()
 	copy(byteRGBA_clock_2.Pix, baseImage.Pix)

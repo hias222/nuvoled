@@ -6,6 +6,7 @@ import (
 
 	"swimdata.de/nuvoled/logging"
 	"swimdata.de/nuvoled/mqttclient"
+	"swimdata.de/nuvoled/sendclock"
 	"swimdata.de/nuvoled/traffic"
 	"swimdata.de/nuvoled/udpmessages"
 	"swimdata.de/nuvoled/udpserver"
@@ -23,6 +24,8 @@ func main() {
 	flag.Parse()
 
 	var logger = logging.GetLogger()
+
+	sendclock.InitParam()
 
 	/*
 		appEnv := os.Getenv("APP_ENV")
