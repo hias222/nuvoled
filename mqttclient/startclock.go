@@ -49,7 +49,8 @@ func startTicker() {
 		}
 
 		SubscribeMqtt(c)
-		start := time.Now()
+		// hier halbe sekunde dazu
+		start := time.Now().Add(500 * time.Millisecond)
 
 		for {
 			select {
